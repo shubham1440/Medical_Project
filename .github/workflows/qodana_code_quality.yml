@@ -30,11 +30,13 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
-          # Fix: Explicitly specify the JVM linter image for version 2025.2
-          args: --image,jetbrains/qodana-jvm:2025.2
+          # --image specifies the linter; --fail-threshold sets how many issues are allowed before failing
+          # Setting fail-threshold to 0 means it fails on ANY issue (default).
+          # Increase this number (e.g., 50) if you want the build to pass with some existing issues.
+          args: --image,jetbrains/qodana-jvm:2025.2,--fail-threshold,0
           pr-mode: false
           use-caches: true
           post-pr-comment: true
           use-annotations: true
-          upload-result: true # Enabled to help you see results in GitHub UI
+          upload-result: true
           push-fixes: 'none'
