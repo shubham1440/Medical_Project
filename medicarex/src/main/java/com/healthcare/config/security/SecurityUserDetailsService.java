@@ -5,7 +5,6 @@ import com.healthcare.models.enums.Role;
 import com.healthcare.repo.UserRepository;
 import groovy.util.logging.Slf4j;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +26,8 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = (User) userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(STR."User not found: \{email}"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())

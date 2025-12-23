@@ -103,17 +103,22 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw e;
         }
 
-        Provider provider;
-        try {
-            provider = providerRepository.getReferenceById(dto.getProviderId());
-            if (provider == null) {
-                log.warn("No provider found with id: {}", dto.getProviderId());
-                throw new IllegalArgumentException("Provider does not exist: " + dto.getProviderId());
-            }
-        } catch (Exception e) {
-            log.error("Error fetching provider by id {}: {}", dto.getProviderId(), e.getMessage());
-            throw e;
-        }
+//        Provider provider;
+//        try {
+//            provider = providerRepository.getReferenceById(dto.getProviderId());
+//            if (provider == null) {
+//                log.warn("No provider found with id: {}", dto.getProviderId());
+//                throw new IllegalArgumentException("Provider does not exist: " + dto.getProviderId());
+//            }
+//        } catch (Exception e) {
+//            log.error("Error fetching provider by id {}: {}", dto.getProviderId(), e.getMessage());
+//            throw e;
+//        }
+        Provider provider = providerRepository.findById(dto.getProviderId())
+                .orElseThrow(() -> {
+                    log.warn("No provider found with id: {}", dto.getProviderId());
+                    return new IllegalArgumentException("Provider does not exist: " + dto.getProviderId());
+                });
 
         Appointment appointment = Appointment.builder()
                 .patient(patient)
@@ -182,6 +187,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (patient == null) {
             log.warn("No patient found with email: {}", phiMaskingUtil.maskEmail(UserEmail));
         }
+//        List<Appointment> appointmentList = appointmentRepository.findAllByPatient_Id(patient.getId());
+//        return toDtoList(appointmentList);
+        if (patient == null) {
+            log.warn("No patient found with email: {}. Returning empty appointment list.", phiMaskingUtil.maskEmail(UserEmail));
+            return Collections.emptyList();
+        }
+
         List<Appointment> appointmentList = appointmentRepository.findAllByPatient_Id(patient.getId());
         return toDtoList(appointmentList);
     }
