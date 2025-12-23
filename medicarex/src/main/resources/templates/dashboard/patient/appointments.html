@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>My Appointments</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2><i class="bi bi-calendar-check"></i> My Appointments</h2>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#bookAppointmentModal">
+                    <i class="bi bi-plus-circle"></i> Book Appointment
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Provider</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="appointment : ${appointments}">
+                        <td th:text="${appointment.startTime}"></td>
+                        <td th:text="${appointment.providerName}"></td>
+                        <td th:text="${appointment.reason}"></td>
+                        <td>
+                                <span class="badge"
+                                      th:classappend="${appointment.status == 'CONFIRMED' ? ' bg-success' :
+                                                      (appointment.status == 'REQUESTED' ? ' bg-warning' :
+                                                      (appointment.status == 'COMPLETED' ? ' bg-info' : ' bg-secondary'))}"
+                                      th:text="${appointment.status}"></span>
+                        </td>
+                        <td>
+                            <button th:if="${appointment.status == 'REQUESTED' or appointment.status == 'CONFIRMED'}"
+                                    class="btn btn-sm btn-danger"
+                                    th:onclick="'cancelAppointment(' + ${appointment.id} + ')'">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="bookAppointmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Book New Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form th:action="@{/patient/appointments}" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="providerId" class="form-label">Provider</label>
+                            <select class="form-select" id="providerId" name="providerId" required>
+                                <option value="">Select Provider</option>
+                                <option th:each="provider : ${providers}"
+                                        th:value="${provider.id}"
+                                        th:text="${provider.firstName + ' ' + provider.lastName + ' - ' + provider.specialty}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="startTime" class="form-label">Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="startTime"
+                                   name="startTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Reason</label>
+                            <textarea class="form-control" id="reason" name="reason"
+                                      rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Book Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="scripts">
+    <script>
+        function cancelAppointment(appointmentId) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                fetch(`/patient/appointments/${appointmentId}/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ reason: 'Patient requested cancellation' })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to cancel appointment');
+                    }
+                });
+            }
+        }
+    </script>
+</div>
+</body>
+</html>

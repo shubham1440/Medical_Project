@@ -1,0 +1,32 @@
+<div th:fragment="stats" class="container mb-5" style="margin-top: -80px; position: relative; z-index: 10;">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card-modern p-4 shadow-sm border-0">
+                <div class="d-flex justify-content-between mb-4">
+                    <h6 class="fw-bold">Bed Availability</h6>
+                    <span class="small fw-bold text-success"><span class="live-pulse"></span> LIVE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-modern p-4 text-center shadow-sm border-0">
+                <h6 class="fw-bold mb-2">Insurance TPAs</h6>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <span class="badge bg-light text-dark border p-2">Star Health</span>
+                    <div class="collapse w-100" id="moreTPAs">
+                    </div>
+                    <button class="badge bg-primary-light p-2 fw-bold" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#moreTPAs" id="tpaBtn">
+                        +42 More
+                    </button>
+                </div>
+            </div>
+            <script>
+                document.getElementById('moreTPAs').addEventListener('shown.bs.collapse', () => {
+                    document.getElementById('tpaBtn').innerHTML = 'Show Less';
+                });
+            </script>
+        </div>
+    </div>
+</div>

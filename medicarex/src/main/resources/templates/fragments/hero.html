@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="hero" class="hero-viewport"
+        style="min-height: 80vh; background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url('/images/image_0b748b.jpg?auto=format&fit=crop&q=80&w=2000'); background-size: cover; display: flex; align-items: center;">
+    <div class="container text-center">
+        <h1 class="display-3 fw-800 mb-4">Portal <span class="text-primary">Intelligence.</span></h1>
+
+        <div class="search-wrapper mx-auto mt-5 d-flex align-items-center shadow-lg"
+             style="max-width: 800px; background: white; border-radius: 100px; padding: 10px;">
+            <input type="text" class="form-control border-0 px-4 shadow-none"
+                   placeholder="Search medical records, doctors, or facilities...">
+            <button class="btn btn-primary rounded-pill px-5 py-2 fw-bold">Search</button>
+        </div>
+
+        <div class="mt-4">
+            <span class="badge rounded-pill bg-light text-dark border px-3 py-2 fw-600">
+                <span class="live-pulse"></span> 14 Doctors Online
+            </span>
+        </div>
+    </div>
+</header>
+
+</body>
+</html>

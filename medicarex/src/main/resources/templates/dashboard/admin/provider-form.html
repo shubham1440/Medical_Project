@@ -1,0 +1,338 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{layout}">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title layout:fragment="title">Register Provider | Gopal Hospital</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">-->
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;gh-success: #43B02A;-->
+<!--            &#45;&#45;gh-muted-bg: #f1f3f5;-->
+<!--            &#45;&#45;gh-border: #e9ecef;-->
+<!--            &#45;&#45;gh-text-dark: #2d3436;-->
+<!--        }-->
+<!--        body { background-color: #f8fafd; font-family: 'Inter', sans-serif; color: var(&#45;&#45;gh-text-dark); }-->
+<!--        .form-card { background: white; border-radius: 28px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 10px 40px rgba(0,0,0,0.03); padding: 40px; }-->
+<!--        .section-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #636e72; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }-->
+<!--        .section-title::after { content: ""; flex: 1; height: 1px; background: var(&#45;&#45;gh-border); }-->
+<!--        .form-label { font-weight: 600; color: #576574; font-size: 0.88rem; margin-bottom: 8px; }-->
+<!--        .form-control, .form-select { border-radius: 14px; padding: 12px 18px; border: 1px solid #dcdde1; background-color: #fff; font-size: 0.95rem; }-->
+<!--        .form-select:disabled { background-color: var(&#45;&#45;gh-muted-bg) !important; color: #b2bec3; cursor: not-allowed; }-->
+<!--        .online-badge { background: #e1f2e9; color: #2d7a4d; font-weight: 700; padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; }-->
+<!--        .btn-provider { background: var(&#45;&#45;gh-success); color: white; border: none; border-radius: 14px; padding: 14px 30px; font-weight: 700; }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div layout:fragment="content">-->
+<!--    <div class="container py-5">-->
+<!--        <div class="d-flex justify-content-between align-items-center mb-4 col-lg-10 mx-auto">-->
+<!--            <div>-->
+<!--                <h2 class="fw-bold mb-1">Add Provider</h2>-->
+<!--                <p class="text-muted small">Setup healthcare professional credentials</p>-->
+<!--            </div>-->
+<!--            <span class="online-badge">Admin Access</span>-->
+<!--        </div>-->
+
+<!--        <div class="row justify-content-center">-->
+<!--            <div class="col-lg-10">-->
+<!--                <form th:action="@{/admin/providers/new}" th:object="${providerRequest}" method="post"-->
+<!--                      class="form-card" id="providerForm" onsubmit="enableFieldsBeforeSubmit()">-->
+
+<!--                    <div class="section-title">Credentials</div>-->
+<!--                    <div class="row g-4 mb-5">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Email Address *</label>-->
+<!--                            <input th:field="*{email}" type="email" class="form-control" placeholder="doctor@hospital.com" required/>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Temporary Password *</label>-->
+<!--                            <input th:field="*{password}" type="password" class="form-control" placeholder="••••••••" required/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="section-title">Department & Specialty</div>-->
+<!--                    <div class="row g-4 mb-5">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label for="department" class="form-label">Department *</label>-->
+<!--                            <select th:field="*{department}" id="department" class="form-select" onchange="updateSpecialties()" required>-->
+<!--                                <option value="" selected disabled>Select Department</option>-->
+<!--                                <option value="Cardiology">Cardiology</option>-->
+<!--                                <option value="Neurology">Neurology</option>-->
+<!--                                <option value="Orthopedics">Orthopedics</option>-->
+<!--                                <option value="Pediatrics">Pediatrics</option>-->
+<!--                                <option value="Surgery">Surgery</option>-->
+<!--                                <option value="Radiology">Radiology</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+
+<!--                        <div class="col-md-6">-->
+<!--                            <label for="specialty" class="form-label">Specialty *</label>-->
+<!--                            <select th:field="*{specialty}" id="specialty" class="form-select" disabled required>-->
+<!--                                <option value="" selected disabled>Choose Specialty</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="section-title">Identity & Facility</div>-->
+<!--                    <div class="row g-4 mb-4">-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">First Name *</label>-->
+<!--                            <input th:field="*{firstName}" type="text" class="form-control" required/>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                            <label class="form-label">Last Name *</label>-->
+<!--                            <input th:field="*{lastName}" type="text" class="form-control" required/>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <label class="form-label">License Number *</label>-->
+<!--                            <input th:field="*{licenseNumber}" type="text" class="form-control" required/>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <label class="form-label">Primary Facility</label>-->
+<!--                            <input th:field="*{facility}" type="text" class="form-control" placeholder="Main Campus"/>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <label class="form-label">Contact Phone</label>-->
+<!--                            <input th:field="*{phone}" type="tel" class="form-control" placeholder="+91..."/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="d-flex justify-content-end gap-3 pt-4 border-top mt-4">-->
+<!--                        <a th:href="@{/admin/dashboard}" class="btn btn-link text-decoration-none text-muted fw-bold mt-2">Cancel</a>-->
+<!--                        <button type="submit" class="btn btn-provider">Create Account</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <script th:inline="javascript">-->
+<!--        const specialtyMap = {-->
+<!--            "Cardiology": ["Interventional Cardiology", "Electrophysiology", "Cardiovascular Surgery"],-->
+<!--            "Neurology": ["Neurosurgery", "Clinical Neurology", "Neuro-Ophthalmology"],-->
+<!--            "Orthopedics": ["Sports Medicine", "Joint Replacement", "Spinal Surgery"],-->
+<!--            "Pediatrics": ["Neonatology", "Pediatric Oncology", "General Pediatrics"],-->
+<!--            "Surgery": ["General Surgery", "Plastic Surgery", "Vascular Surgery"],-->
+<!--            "Radiology": ["Diagnostic Radiology", "Interventional Radiology", "Nuclear Medicine"]-->
+<!--        };-->
+
+<!--        function updateSpecialties() {-->
+<!--            const deptSelect = document.getElementById('department');-->
+<!--            const specSelect = document.getElementById('specialty');-->
+<!--            if(!deptSelect || !specSelect) return;-->
+
+<!--            const selectedDept = deptSelect.value;-->
+
+<!--            if (!selectedDept) {-->
+<!--                specSelect.disabled = true;-->
+<!--                return;-->
+<!--            }-->
+
+<!--            specSelect.innerHTML = '<option value="" selected disabled>Choose Specialty</option>';-->
+<!--            specSelect.disabled = false;-->
+
+<!--            const specialties = specialtyMap[selectedDept];-->
+<!--            if (specialties) {-->
+<!--                specialties.forEach(spec => {-->
+<!--                    const opt = document.createElement('option');-->
+<!--                    opt.value = spec;-->
+<!--                    opt.textContent = spec;-->
+<!--                    specSelect.appendChild(opt);-->
+<!--                });-->
+<!--            }-->
+<!--        }-->
+
+<!--        // FIX: Browser won't submit disabled fields. This enables it right as the button is clicked.-->
+<!--        function enableFieldsBeforeSubmit() {-->
+<!--            document.getElementById('specialty').disabled = false;-->
+<!--        }-->
+
+<!--        document.addEventListener('DOMContentLoaded', updateSpecialties);-->
+<!--    </script>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="title">Register Provider | Gopal Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --gh-success: #43B02A;
+            --gh-muted-bg: #f1f3f5;
+            --gh-border: #e9ecef;
+            --gh-text-dark: #2d3436;
+        }
+        body { background-color: #f8fafd; font-family: 'Inter', sans-serif; color: var(--gh-text-dark); }
+
+        /* Navigation Style */
+        .back-nav {
+            text-decoration: none;
+            color: #636e72;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+            margin-bottom: 1.5rem;
+        }
+        .back-nav:hover { color: var(--gh-success); }
+
+        .form-card { background: white; border-radius: 28px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 10px 40px rgba(0,0,0,0.03); padding: 40px; }
+        .section-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #636e72; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: var(--gh-border); }
+        .form-label { font-weight: 600; color: #576574; font-size: 0.88rem; margin-bottom: 8px; }
+        .form-control, .form-select { border-radius: 14px; padding: 12px 18px; border: 1px solid #dcdde1; background-color: #fff; font-size: 0.95rem; }
+        .form-select:disabled { background-color: var(--gh-muted-bg) !important; color: #b2bec3; cursor: not-allowed; }
+        .online-badge { background: #e1f2e9; color: #2d7a4d; font-weight: 700; padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; }
+        .btn-provider { background: var(--gh-success); color: white; border: none; border-radius: 14px; padding: 14px 30px; font-weight: 700; transition: transform 0.2s; }
+        .btn-provider:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(67, 176, 42, 0.3); }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container py-5">
+
+        <div class="col-lg-10 mx-auto">
+            <a th:href="@{/admin/dashboard}" class="back-nav">
+                <i class="bi bi-arrow-left-circle-fill"></i> BACK TO CONTROL CENTER
+            </a>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1" style="letter-spacing: -1px;">Add Provider</h2>
+                    <p class="text-muted small">Onboard a new healthcare professional to the system</p>
+                </div>
+                <span class="online-badge"><i class="bi bi-shield-lock-fill me-1"></i> Admin Secured</span>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <form th:action="@{/admin/providers/new}" th:object="${providerRequest}" method="post"
+                      class="form-card" id="providerForm" onsubmit="enableFieldsBeforeSubmit()">
+
+                    <div class="section-title">Credentials</div>
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <label class="form-label">Email Address *</label>
+                            <input th:field="*{email}" type="email" class="form-control" placeholder="doctor@hospital.com" required/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Temporary Password *</label>
+                            <input th:field="*{password}" type="password" class="form-control" placeholder="••••••••" required/>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Department & Specialty</div>
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <label for="department" class="form-label">Department *</label>
+                            <select th:field="*{department}" id="department" class="form-select" onchange="updateSpecialties()" required>
+                                <option value="" selected disabled>Select Department</option>
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Orthopedics">Orthopedics</option>
+                                <option value="Pediatrics">Pediatrics</option>
+                                <option value="Surgery">Surgery</option>
+                                <option value="Radiology">Radiology</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="specialty" class="form-label">Specialty *</label>
+                            <select th:field="*{specialty}" id="specialty" class="form-select" disabled required>
+                                <option value="" selected disabled>Choose Specialty</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Identity & Facility</div>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name *</label>
+                            <input th:field="*{firstName}" type="text" class="form-control" required/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name *</label>
+                            <input th:field="*{lastName}" type="text" class="form-control" required/>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">License Number *</label>
+                            <input th:field="*{licenseNumber}" type="text" class="form-control" required/>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Primary Facility</label>
+                            <input th:field="*{facility}" type="text" class="form-control" placeholder="Main Campus"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Contact Phone</label>
+                            <input th:field="*{phone}" type="tel" class="form-control" placeholder="+91..."/>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3 pt-4 border-top mt-4">
+                        <a th:href="@{/admin/dashboard}" class="btn btn-link text-decoration-none text-muted fw-bold mt-1">Cancel Registration</a>
+                        <button type="submit" class="btn btn-provider">Create Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const specialtyMap = {
+            "Cardiology": ["Interventional Cardiology", "Electrophysiology", "Cardiovascular Surgery"],
+            "Neurology": ["Neurosurgery", "Clinical Neurology", "Neuro-Ophthalmology"],
+            "Orthopedics": ["Sports Medicine", "Joint Replacement", "Spinal Surgery"],
+            "Pediatrics": ["Neonatology", "Pediatric Oncology", "General Pediatrics"],
+            "Surgery": ["General Surgery", "Plastic Surgery", "Vascular Surgery"],
+            "Radiology": ["Diagnostic Radiology", "Interventional Radiology", "Nuclear Medicine"]
+        };
+
+        function updateSpecialties() {
+            const deptSelect = document.getElementById('department');
+            const specSelect = document.getElementById('specialty');
+            if(!deptSelect || !specSelect) return;
+
+            const selectedDept = deptSelect.value;
+
+            if (!selectedDept) {
+                specSelect.disabled = true;
+                return;
+            }
+
+            specSelect.innerHTML = '<option value="" selected disabled>Choose Specialty</option>';
+            specSelect.disabled = false;
+
+            const specialties = specialtyMap[selectedDept];
+            if (specialties) {
+                specialties.forEach(spec => {
+                    const opt = document.createElement('option');
+                    opt.value = spec;
+                    opt.textContent = spec;
+                    specSelect.appendChild(opt);
+                });
+            }
+        }
+
+        function enableFieldsBeforeSubmit() {
+            document.getElementById('specialty').disabled = false;
+        }
+
+        document.addEventListener('DOMContentLoaded', updateSpecialties);
+    </script>
+</div>
+</body>
+</html>

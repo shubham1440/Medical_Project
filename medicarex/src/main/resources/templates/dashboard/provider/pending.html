@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<div layout:fragment="content">
+
+    <div class="container py-4">
+        <h2 class="mb-4">Appointments Awaiting Your Confirmation</h2>
+        <div class="card shadow">
+            <div class="card-body p-0">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Date &amp; Time</th>
+                        <th>Patient</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="appt : ${pendingAppointments}">
+                        <td>
+                            <span th:text="${#temporals.format(appt.appointmentdate, 'MM/dd/yy') + ' ' + appt.startTime}"></span>
+                        </td>
+                        <td th:text="${appt.patientName}"></td>
+                        <td th:text="${appt.reason}"></td>
+                        <td>
+                            <span class="badge bg-warning" th:text="${appt.status}"></span>
+                        </td>
+                        <td>
+                            <form th:action="@{/provider/appointments/{id}/confirm(id=${appt.id})}" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check-circle"></i> Confirm</button>
+                            </form>
+                            <form th:action="@{/provider/appointments/{id}/cancel(id=${appt.id})}" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(pendingAppointments)}">
+                        <td colspan="5" class="text-center text-muted py-3" style="font-style: italic;">
+                            No appointments pending confirmation.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .badge.bg-warning {
+          font-size: 1rem;
+          font-weight: 500;
+          border-radius: 8px;
+          letter-spacing: 0.02em;
+          box-shadow: 0 1px 3px rgba(66,66,66,0.06);
+        }
+        .btn-sm {
+          min-width: 94px;
+          font-size: 1rem;
+          padding: 0.40rem 0.75rem;
+          font-weight: 500;
+        }
+        .table th, .table td {
+          vertical-align: middle;
+        }
+    </style>
+
+</div>
+</html>

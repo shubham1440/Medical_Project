@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="title">Register New Patient | Gopal Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --gh-primary: #0f4c81;
+            --gh-bg: #f8fafd;
+        }
+        body { background-color: var(--gh-bg); font-family: 'Inter', sans-serif; }
+
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gh-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .form-label { font-weight: 600; color: #475569; font-size: 0.9rem; }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            background-color: #fbfcfd;
+        }
+
+        .form-control:focus {
+            border-color: var(--gh-primary);
+            box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.1);
+        }
+
+        .btn-register {
+            background: var(--gh-primary);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn-register:hover {
+            background: #082f49;
+            transform: translateY(-1px);
+        }
+
+        .input-group-text {
+            border-radius: 12px 0 0 12px;
+            background: white;
+            border-right: none;
+        }
+
+        .has-icon .form-control { border-left: none; border-radius: 0 12px 12px 0; }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container py-5">
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-10">
+                <a th:href="@{/admin/dashboard}" class="text-decoration-none text-muted small fw-bold mb-3 d-inline-block">
+                    <i class="bi bi-arrow-left me-1"></i> BACK TO DASHBOARD
+                </a>
+                <h2 class="fw-800 text-dark" style="letter-spacing: -1px;">Patient Registration</h2>
+                <p class="text-muted">Fill in the medical and personal details to create a secure patient profile.</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <form th:action="@{/admin/patients/new}" th:object="${createPatientRequest}" method="post" class="form-card p-4 p-md-5">
+
+                    <div th:if="${#fields.hasErrors()}" class="alert alert-danger border-0 rounded-4 d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Registration Failed:</strong> Please correct the errors highlighted below.
+                        </div>
+                    </div>
+
+                    <div class="section-title">Personal Information</div>
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                            <input type="text" id="firstName" th:field="*{firstName}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" placeholder="John">
+                            <div class="invalid-feedback" th:errors="*{firstName}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                            <input type="text" id="lastName" th:field="*{lastName}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" placeholder="Doe">
+                            <div class="invalid-feedback" th:errors="*{lastName}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="dateOfBirth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('dateOfBirth')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{dateOfBirth}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
+                            <select id="gender" th:field="*{gender}" class="form-select" th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid'">
+                                <option value="" selected disabled>Select Gender</option>
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                            <div class="invalid-feedback" th:errors="*{gender}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nationalId" class="form-label">National ID</label>
+                            <input type="text" id="nationalId" th:field="*{nationalId}" class="form-control" placeholder="ID Number">
+                        </div>
+                    </div>
+
+                    <div class="section-title">Account Security</div>
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                            <div class="input-group has-icon">
+                                <span class="input-group-text"><i class="bi bi-envelope text-muted"></i></span>
+                                <input type="email" id="email" th:field="*{email}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" placeholder="name@example.com">
+                            </div>
+                            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Temporary Password <span class="text-danger">*</span></label>
+                            <div class="input-group has-icon">
+                                <span class="input-group-text"><i class="bi bi-key text-muted"></i></span>
+                                <input type="password" id="password" th:field="*{password}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="••••••••">
+                            </div>
+                            <small class="text-muted mt-1 d-block" style="font-size: 0.75rem;">Must contain 8+ characters, one uppercase, and one symbol.</small>
+                            <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Clinical & Contact Details</div>
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <label for="mrn" class="form-label">MRN (Medical Record Number) <span class="text-danger">*</span></label>
+                            <input type="text" id="mrn" th:field="*{mrn}" class="form-control text-uppercase fw-bold"
+                                   th:classappend="${#fields.hasErrors('mrn')} ? 'is-invalid'" placeholder="MRN-000000">
+                            <div class="invalid-feedback" th:errors="*{mrn}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" th:field="*{phone}" class="form-control" placeholder="+1 (555) 000-0000">
+                        </div>
+                        <div class="col-12">
+                            <label for="address" class="form-label">Residential Address</label>
+                            <textarea id="address" th:field="*{address}" class="form-control" rows="2" placeholder="Full residential address..."></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="emergencyContact" class="form-label">Emergency Contact Info</label>
+                            <input type="text" id="emergencyContact" th:field="*{emergencyContact}" class="form-control"
+                                   placeholder="Name, Relation, and Phone">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-4 border-top">
+                        <span class="text-muted small"><span class="text-danger">*</span> Required fields</span>
+                        <div>
+                            <a th:href="@{/admin/dashboard}" class="btn btn-link text-decoration-none text-muted fw-bold me-3">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-register px-5">
+                                <i class="bi bi-person-plus-fill me-2"></i> Create Patient Profile
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav th:fragment="nav" class="sticky-top w-100 modern-navbar border-bottom p-0">
+
+    <div class="emergency-strip py-2 border-bottom d-none d-lg-block">
+        <div class="container-fluid px-lg-5 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-4">
+                <span class="emergency-number">
+                    <i class="bi bi-telephone-fill pulse-icon me-2"></i>
+                    Emergency: <strong class="ms-1">1234567890</strong>
+                </span>
+                <span class="utility-item">
+                    <i class="bi bi-geo-alt-fill me-1 text-primary"></i>
+                    Global Presence
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-3 utility-links">
+                <a href="#" class="text-decoration-none">International Patients</a>
+                <span class="separator">|</span>
+                <a href="#" class="text-decoration-none">Pay Online</a>
+                <span class="separator">|</span>
+                <a href="#" class="text-decoration-none">News & Events</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar navbar-expand-xl py-2 p-0">
+        <div class="container-fluid px-0">
+            <a class="navbar-brand d-flex align-items-center gap-3 m-0 ps-3 ps-lg-4" th:href="@{/}">
+                <div class="logo-animation">
+                    <svg width="38" height="38" viewBox="0 0 24 24" fill="none">
+                        <path d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M2 12H6L9 19L15 5L18 12H22" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="lh-1">
+                    <span class="fw-800 fs-3 d-block text-dark tracking-tighter">Gopal<span class="text-primary">Hospital</span></span>
+                </div>
+            </a>
+
+            <button class="navbar-toggler border-0 me-3" type="button" data-bs-toggle="collapse" data-bs-target="#extremeNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="extremeNav">
+                <ul class="navbar-nav mx-auto align-items-center text-nowrap">
+
+                    <li class="nav-item dropdown px-2">
+                        <a class="nav-link dropdown-toggle modern-link" href="#" data-bs-toggle="dropdown">Locations</a>
+                        <ul class="dropdown-menu border-0 shadow-lg mt-0 rounded-4 animate slideIn p-3" style="min-width: 250px;">
+                            <li>
+                                <a class="dropdown-item py-2 px-3 rounded-3" href="#">
+                                    <div class="fw-bold text-dark">Main Campus</div>
+                                    <small class="text-muted">Sector 38, Gurugram</small>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2 px-3 rounded-3" href="#">
+                                    <div class="fw-bold text-dark">City Center</div>
+                                    <small class="text-muted">DLF Phase 5, Medical Hub</small>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider opacity-50"></li>
+                            <li><a class="dropdown-item py-2 px-3 rounded-3 text-primary fw-bold" href="#">View All 12 Clinics <i class="bi bi-arrow-right ms-1"></i></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown dropdown-mega px-2">
+                        <a class="nav-link dropdown-toggle modern-link" href="#" data-bs-toggle="dropdown">Specialities</a>
+
+                        <div class="dropdown-menu border-0 shadow-lg mega-menu-wide animate slideIn">
+                            <div class="row g-0">
+                                <div class="col-md-4 border-end pe-3">
+                                    <h6 class="dropdown-header">Critical Care</h6>
+                                    <div class="d-flex flex-column">
+                                        <a class="dropdown-item" href="#"><i class="bi bi-heart-pulse text-danger"></i>Cardiology</a>
+                                        <a class="dropdown-item" href="#"><i class="bi bi-brain text-info"></i>Neurology</a>
+                                        <a class="dropdown-item" href="#"><i class="bi bi-capsule text-warning"></i>Oncology</a>
+                                        <a class="dropdown-item" href="#"><i class="bi bi-lungs text-success"></i>Pulmonology</a>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 border-end px-3">
+                                    <h6 class="dropdown-header">Surgical Hub</h6>
+                                    <div class="d-flex flex-column">
+                                        <a class="dropdown-item" href="#"><i class="bi bi-person-walking text-secondary"></i>Orthopaedics</a>
+                                        <a class="dropdown-item" href="#"><i class="bi bi-robot text-primary"></i>Robotic Surgery</a>
+                                        <a class="dropdown-item" href="#"><i class="bi bi-shield-plus text-success"></i>Transplant</a>
+                                        <a class="dropdown-item" href="#"><i class="bi bi-medicine-bottle text-danger"></i>Gastroenterology</a>
+                                    </div>
+                                </div>
+
+<!--                                <div class="col-md-4 ps-3">-->
+<!--                                    <div class="featured-speciality p-4 rounded-4 text-center">-->
+<!--                                        <img src="https://img.icons8.com/color/96/doctor-female.png" width="64" class="mb-2">-->
+<!--                                        <h6 class="fw-bold">Find a Specialist</h6>-->
+<!--                                        <p class="small text-muted">Search 400+ doctors.</p>-->
+<!--                                        <button class="btn btn-primary rounded-pill w-100 fw-bold shadow-sm">Search Doctor</button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown px-2">
+                        <a class="nav-link dropdown-toggle modern-link" href="#" data-bs-toggle="dropdown">Services</a>
+                        <div class="dropdown-menu border-0 shadow-lg mt-0 rounded-4 animate slideIn p-3" style="min-width: 400px;">
+                            <div class="row g-0">
+                                <div class="col-6">
+                                    <a class="dropdown-item py-2" href="#"><i class="bi bi-droplet me-2"></i>Blood Bank</a>
+                                    <a class="dropdown-item py-2" href="#"><i class="bi bi-truck me-2"></i>Ambulance</a>
+                                    <a class="dropdown-item py-2" href="#"><i class="bi bi-calendar-check me-2"></i>Health Checkup</a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="dropdown-item py-2" href="#"><i class="bi bi-prescription2 me-2"></i>Pharmacy</a>
+                                    <a class="dropdown-item py-2" href="#"><i class="bi bi-microscope me-2"></i>Diagnostics</a>
+                                    <a class="dropdown-item py-2" href="#"><i class="bi bi-house-door me-2"></i>Home Care</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="nav-item px-2"><a class="nav-link modern-link" href="#">Health Library</a></li>
+
+                    <li class="nav-item dropdown px-2">
+                        <a class="nav-link dropdown-toggle modern-link" href="#" data-bs-toggle="dropdown">Academics</a>
+                        <ul class="dropdown-menu border-0 shadow-lg mt-0 rounded-4 animate slideIn">
+                            <li><a class="dropdown-item py-2 px-3" href="#">DNB Programs</a></li>
+                            <li><a class="dropdown-item py-2 px-3" href="#">Clinical Research</a></li>
+                            <li><a class="dropdown-item py-2 px-3" href="#">Nursing College</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item px-2"><a class="nav-link modern-link" href="#">Careers</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3 pe-3 pe-lg-4 ms-auto ms-lg-0">
+                    <button class="btn btn-feedback rounded-pill px-3 py-2 d-flex align-items-center gap-2">
+                        <i class="bi bi-chat-dots"></i>
+                        <span class="fw-bold small">Feedback</span>
+                    </button>
+
+                    <button class="btn btn-call-back rounded-pill px-4 py-2 d-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi bi-telephone-plus"></i>
+                        <span class="fw-bold">Request Call Back</span>
+                    </button>
+
+                    <div sec:authorize="isAnonymous()">
+                        <a th:href="@{/login}" class="modern-login-btn shadow-sm">
+                            <i class="bi bi-person-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* ========================================================================
+       1. EMERGENCY STRIP & UTILITY TOP BAR
+       ======================================================================== */
+    .emergency-strip {
+        background-color: #f8f9fa;
+        font-size: 0.82rem;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .emergency-number {
+        color: #ef4444;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+    }
+
+    .pulse-icon {
+        animation: pulse-red 2s infinite;
+    }
+
+    @keyframes pulse-red {
+        0% { transform: scale(0.95); opacity: 1; }
+        70% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(0.95); opacity: 1; }
+    }
+
+    .utility-links a {
+        color: #64748b;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .utility-links a:hover { color: #0d6efd; }
+    .separator { color: #cbd5e1; margin: 0 8px; }
+
+    /* ========================================================================
+       2. MODERN NAVBAR & MAIN LINKS
+       ======================================================================== */
+    .modern-navbar {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 1050;
+    }
+
+    .modern-link {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #334155 !important;
+        position: relative;
+        padding: 0.6rem 1.2rem !important;
+        transition: color 0.3s ease;
+    }
+
+    .modern-link:hover { color: #0d6efd !important; }
+
+    /* ========================================================================
+       3. MEGA MENU FIX (Solves Overlapping Text)
+       ======================================================================== */
+    .dropdown-mega {
+        position: static !important;
+    }
+
+    .mega-menu-wide {
+        /* FIX: Ensure the menu is wide enough for all 3 columns */
+        min-width: 900px !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) translateY(15px) !important;
+        border-top: 4px solid #0d6efd !important;
+        padding: 2.5rem !important;
+        border-radius: 0 0 1.5rem 1.5rem !important;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+    }
+
+    /* FIX: Force row to display as a flex container to keep columns separated */
+    .mega-menu-wide .row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        margin: 0 !important;
+    }
+
+    .dropdown-header {
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        padding: 0 0 1.2rem 0 !important;
+        color: #0d6efd !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+    }
+
+    /* FIX: Prevent names like 'Gastroenterology' from wrapping */
+    .dropdown-item {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #475569 !important;
+        padding: 0.7rem 0.5rem !important;
+        display: flex;
+        align-items: center;
+        white-space: nowrap !important;
+        transition: all 0.2s ease;
+        background: transparent !important;
+    }
+
+    /* FIX: Align text by giving icons a fixed container width */
+    .dropdown-item i {
+        width: 35px;
+        font-size: 1.3rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .dropdown-item:hover {
+        color: #0d6efd !important;
+        transform: translateX(10px);
+        background: transparent !important;
+    }
+
+    /* ========================================================================
+       4. FEATURED BOX (Right Side)
+       ======================================================================== */
+    .featured-speciality {
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        border-radius: 1.2rem;
+        padding: 1.5rem;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .featured-speciality img {
+        margin-bottom: 1rem;
+        width: 70px;
+    }
+
+    /* ========================================================================
+       5. BUTTONS & UI
+       ======================================================================== */
+    .btn-call-back {
+        background: #ef4444 !important;
+        color: white !important;
+        border: none;
+        font-weight: 700;
+        padding: 0.7rem 1.5rem;
+        border-radius: 50px;
+    }
+
+    .btn-feedback {
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        font-weight: 600;
+        padding: 0.7rem 1.2rem;
+        border-radius: 50px;
+    }
+
+    /* ========================================================================
+       6. ANIMATIONS
+       ======================================================================== */
+    .animate.slideIn {
+        animation: slideInNav 0.3s ease forwards;
+        display: block !important;
+    }
+
+    @keyframes slideInNav {
+        from { opacity: 0; transform: translateX(-50%) translateY(25px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(15px); }
+    }
+</style>
+</body>
+</html>
+

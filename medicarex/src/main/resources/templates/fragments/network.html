@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<section th:fragment="network" class="section-padding bg-white" id="locations">
+    <div class="container">
+        <div class="row g-4 mb-5 text-center">
+            <div class="col-6 col-lg-4">
+                <div class="stat-card p-4 border rounded-4">
+                    <i class="bi bi-hospital fs-1 text-primary"></i>
+                    <h3 class="fw-800 mt-2">74+</h3>
+                    <p class="text-muted small">Hospitals Worldwide</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-4">
+                <div class="stat-card p-4 border rounded-4">
+                    <i class="bi bi-person-heart fs-1 text-primary"></i>
+                    <h3 class="fw-800 mt-2">13,000+</h3>
+                    <p class="text-muted small">Expert Doctors</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-4">
+                <div class="stat-card p-4 border rounded-4">
+                    <i class="bi bi-microscope fs-1 text-primary"></i>
+                    <h3 class="fw-800 mt-2">2,300+</h3>
+                    <p class="text-muted small">Diagnostic Centers</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h2 class="fw-800">Delivering Excellence, Everywhere</h2>
+                <p class="text-muted">Access world-class healthcare across our network.</p>
+            </div>
+            <button class="btn btn-gold mb-2">EXPLORE ALL LOCATIONS <i class="bi bi-arrow-right"></i></button>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3" th:each="loc : ${locations}">
+                <div class="location-card p-3 border rounded-4 d-flex align-items-center">
+                    <img th:src="${loc.imageUrl}" class="rounded-3 me-3" style="width:60px; height:60px; object-fit:cover;">
+                    <div>
+                        <h6 class="fw-bold mb-0" th:text="${loc.cityName}">City</h6>
+                        <p class="small text-muted mb-0" th:text="${loc.count + ' Locations'}">0 Locations</p>
+                    </div>
+                </div>
+            </div>
+
+            <th:block th:if="${#lists.isEmpty(locations)}">
+                <div class="col-md-6 col-lg-3">
+                    <div class="location-card p-3 border rounded-4 d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?w=100" class="rounded-3 me-3" style="width:60px; height:60px; object-fit:cover;">
+                        <div><h6 class="fw-bold mb-0">Delhi</h6><p class="small text-muted mb-0">2 Locations</p></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="location-card p-3 border rounded-4 d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=100" class="rounded-3 me-3" style="width:60px; height:60px; object-fit:cover;">
+                        <div><h6 class="fw-bold mb-0">Chennai</h6><p class="small text-muted mb-0">13 Locations</p></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="location-card p-3 border rounded-4 d-flex align-items-center">
+                        <img src="https://unsplash.com/photos/a-large-white-building-with-towers-with-charminar-in-the-background-lCdayu-e9rY?w=100" class="rounded-3 me-3" style="width:60px; height:60px; object-fit:cover;">
+                        <div><h6 class="fw-bold mb-0">Hyderabad</h6><p class="small text-muted mb-0">4 Locations</p></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="location-card p-3 border rounded-4 d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=100" class="rounded-3 me-3" style="width:60px; height:60px; object-fit:cover;">
+                        <div><h6 class="fw-bold mb-0">Bhubaneswar</h6><p class="small text-muted mb-0">1 Location</p></div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</section>
+</body>
+</html>

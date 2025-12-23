@@ -1,0 +1,336 @@
+spring:
+  application:
+    name: medicarex
+
+    config:
+      import: "classpath:/application/mysql-db.yml"
+
+  profiles:
+    active: dev
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/medicarex_db}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        query:
+          in_clause_parameter_padding: true
+          cache:
+            use_second_level_cache: false
+            use_query_cache: false
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+  #          region:
+  #            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    validate-on-migrate: true
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+
+  security:
+    user:
+      name: admin
+      password: admin123
+
+  # JMS Configuration (ActiveMQ Artemis)
+  artemis:
+    mode: embedded
+    embedded:
+      enabled: true
+      persistent: false
+    broker-url: tcp://localhost:61616
+    user: artemis
+    password: artemis
+
+  jms:
+    template:
+      default-destination: medicarex.queue
+      receive-timeout: 5000
+
+  # Kafka Configuration (Alternative to JMS)
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: medicarex-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.healthcare.medicarex
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    properties:
+      spring.json.add.type.headers: false
+
+  # Batch Configuration
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+  # Cache Configuration
+  cache:
+    type: simple
+    cache-names: patients,providers,appointments,encounters,prescriptions,labs
+
+  # Actuator Configuration
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics,prometheus,env,configprops,mappings
+    endpoint:
+      health:
+        show-details: always
+    metrics:
+      export:
+        prometheus:
+          enabled: true
+    tracing:
+      sampling:
+        probability: 1.0
+
+  # Cloud Configuration (Optional)
+  cloud:
+    config:
+      enabled: false
+      uri: http://localhost:8888
+    gateway:
+      enabled: false
+
+# Eureka Configuration (Optional)
+eureka:
+  client:
+    enabled: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+# Application-Specific Configuration
+medicarex:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:u125JNdj7fL9R6xD1aPQwKp5dQH+nN1kkEtjjMtDVA4=}
+      expiration: 3600000 # 1 hour in milliseconds
+      refresh-expiration: 86400000 # 24 hours
+    encryption:
+      algorithm: AES/GCM/NoPadding
+      key: ${ENCRYPTION_KEY:4BfKqjA5uJps/FhfUcmkajHWI8pZ1QJhTxzIGaJFNjs=}
+      version: 1
+
+  password:
+    min-length: 8
+    require-uppercase: true
+    require-lowercase: true
+    require-digit: true
+    require-special: true
+    expiry-days: 90
+
+  rate-limit:
+    patient: 30
+    provider: 60
+    ops: 120
+    admin: 120
+
+  appointment:
+    cancellation-hours: 24
+    slot-duration-minutes: 30
+
+  lab:
+    result-matching-window-days: 14
+    ingestion-directory: ${LAB_INGEST_DIR:./data/lab-ingest}
+
+  document:
+    max-versions: 10
+    storage-path: /{facility}/{department}/{patientId}/{yyyyMM}/{docId}
+
+  audit:
+    retention-days: 2555 # 7 years
+
+  scheduling:
+    missed-followup:
+      enabled: true
+      cron: "0 0 1 * * ?" # Daily at 1 AM
+      lookback-days: 30
+      followup-required-days: 14
+
+    monthly-summary:
+      enabled: true
+      cron: "0 0 2 1 * ?" # First day of month at 2 AM
+
+    re-encryption:
+      enabled: true
+      cron: "0 0 3 * * ?" # Daily at 3 AM
+      age-threshold-days: 10
+
+  reporting:
+    export-directory: ${REPORT_EXPORT_DIR:./data/reports}
+    inactive-patient-days: 90
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.healthcare.medicarex: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [correlationId=%X{correlationId}] [userId=%X{userId}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [correlationId=%X{correlationId}] [userId=%X{userId}] - %msg%n"
+  file:
+    name: logs/medicarex.log
+    max-size: 10MB
+    max-history: 30
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  show-actuator: true
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      labService:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+        permitted-number-of-calls-in-half-open-state: 3
+
+  retry:
+    instances:
+      labService:
+        max-attempts: 3
+        wait-duration: 1000
+        exponential-backoff-multiplier: 2
+
+  ratelimiter:
+    instances:
+      patient:
+        limit-for-period: 30
+        limit-refresh-period: 60s
+        timeout-duration: 0
+      provider:
+        limit-for-period: 60
+        limit-refresh-period: 60s
+        timeout-duration: 0
+      admin:
+        limit-for-period: 120
+        limit-refresh-period: 60s
+        timeout-duration: 0
+
+  bulkhead:
+    instances:
+      labService:
+        max-concurrent-calls: 10
+        max-wait-duration: 500
+
+---
+# application-dev.yml - Development Profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+logging:
+  level:
+    com.healthcare.medicarex: DEBUG
+
+---
+# application-test.yml - Test Profile
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+  flyway:
+    enabled: false
+
+---
+# application-prod.yml - Production Profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  thymeleaf:
+    cache: true
+
+logging:
+  level:
+    root: WARN
+    com.healthcare.medicarex: INFO

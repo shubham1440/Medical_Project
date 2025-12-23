@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gopal Hospital - Patient Registration</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
+
+    <style>
+        :root {
+            --primary-purple: #8b5cf6;
+            --primary-blue: #6366f1;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: url('/images/image_0b748b.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 0;
+        }
+
+        .book-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1100px;
+            background: #ffffff;
+            border-radius: 24px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.6);
+            min-height: 850px;
+        }
+
+        .left-page {
+            flex: 0 0 40%;
+            background: url('/images/image_0b748b.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 45px;
+            color: white;
+        }
+
+        .left-page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.2) 100%);
+            z-index: 1;
+        }
+
+        .left-page-content { position: relative; z-index: 3; }
+
+        .right-page {
+            flex: 1;
+            padding: 40px 50px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .form-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 5px;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-purple);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.05);
+            outline: none;
+        }
+
+        /* --- Password Security Styling --- */
+        .password-wrapper { position: relative; }
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            cursor: pointer;
+            color: var(--text-muted);
+            z-index: 10;
+        }
+        .strength-meter { height: 4px; width: 100%; background: #f1f5f9; margin-top: 8px; border-radius: 2px; overflow: hidden; }
+        .strength-bar { height: 100%; width: 0%; transition: all 0.3s ease; }
+        .strength-text { font-size: 11px; font-weight: 600; margin-top: 4px; display: block; }
+
+        /* --- Phone Picker (Clean) --- */
+        .iti { width: 100%; }
+        .iti__country-list { border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .iti__country:hover { background-color: #f1f5f9 !important; color: var(--text-dark) !important; }
+        .iti__country.iti__highlight { background-color: #e2e8f0 !important; color: var(--text-dark) !important; }
+        .iti__selected-dial-code { font-weight: 600; color: var(--text-dark); margin-left: 6px; }
+
+        .contact-link { text-decoration: none; color: white; display: flex; align-items: center; margin-bottom: 8px; font-size: 0.85rem; }
+        .btn-register {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700;
+            width: 100%; margin-top: 10px; box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        @media (max-width: 991px) {
+            .book-container { flex-direction: column; max-width: 550px; }
+            .left-page { flex: 0 0 180px; padding: 30px; }
+            .right-page { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="book-container">
+    <div class="left-page">
+        <div class="left-page-content">
+            <span class="badge rounded-pill mb-3" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);">ESTD 2007</span>
+            <h1 class="fw-bold mb-2" style="font-size: 2.3rem;">Gopal Hospital</h1>
+            <p class="opacity-75 small">Leading-Edge Medicine. Human-Centered Care.</p>
+        </div>
+        <div class="left-page-content">
+            <div class="mb-4">
+                <a href="https://www.google.com/maps/search/?api=1&query=Gopal+Hospital+Loni+Ghaziabad+Uttar+Pradesh+201102" target="_blank" class="contact-link">
+                    <i class="bi bi-geo-alt-fill me-2 text-info"></i> Loni, Ghaziabad, UP 201102
+                </a>
+                <a href="tel:+91 96507 84984" class="contact-link">
+                    <i class="bi bi-telephone-fill me-2 text-info"></i> +91 96507 84984
+                </a>
+            </div>
+            <div class="p-2 rounded-3 text-center" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                <small class="fw-bold text-uppercase">ISO 9001: 2000 CERTIFIED</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-page">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold m-0">Create Account</h2>
+                <p class="text-muted small m-0">Join our digital medical record system.</p>
+            </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" alt="Logo" style="width: 40px;">
+        </div>
+
+        <form th:action="@{/register}" th:object="${registerRequest}" method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">First Name</label>
+                    <input type="text" th:field="*{firstName}" class="form-control" placeholder="John" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" th:field="*{lastName}" class="form-control" placeholder="Doe" required>
+                </div>
+
+                <div class="col-md-7">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" th:field="*{email}" class="form-control" placeholder="john@email.com" required>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Mobile Phone</label>
+                    <input type="tel" id="phone" th:field="*{phone}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="text" id="dob-picker" th:field="*{dateOfBirth}" class="form-control" placeholder="Select Date" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Gender</label>
+                    <select th:field="*{gender}" class="form-select" required>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Medical Record (MRN)</label>
+                    <input type="text" th:field="*{mrn}" class="form-control" placeholder="GOP-XXXXX">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">National ID (Aadhar)</label>
+                    <input type="text" th:field="*{nationalId}" class="form-control" placeholder="Enter ID Number">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Emergency Contact Info</label>
+                    <input type="text" th:field="*{emergencyContact}" class="form-control" placeholder="Name - Relationship - Phone">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Full Residential Address</label>
+                    <textarea th:field="*{address}" class="form-control" rows="2" placeholder="Street, City, Pincode..."></textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Secure Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password-input" th:field="*{password}" class="form-control" placeholder="••••••••" required>
+                        <i class="bi bi-eye-slash toggle-password" id="togglePassword"></i>
+                    </div>
+                    <div class="strength-meter">
+                        <div id="strength-bar" class="strength-bar"></div>
+                    </div>
+                    <span id="strength-text" class="strength-text text-muted">Enter password</span>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-register">
+                        Complete Registration <i class="bi bi-shield-check ms-2"></i>
+                    </button>
+                    <div class="text-center mt-3">
+                        <small class="text-muted">Already registered? <a th:href="@{/login}" class="text-decoration-none fw-bold" style="color: var(--primary-blue);">Sign In</a></small>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+
+<script>
+    flatpickr("#dob-picker", { dateFormat: "Y-m-d", altInput: true, altFormat: "F j, Y" });
+    const phoneInput = document.querySelector("#phone");
+    window.intlTelInput(phoneInput, { initialCountry: "in", separateDialCode: true, countrySearch: true });
+
+    document.querySelector('#togglePassword').addEventListener('click', function() {
+        const passwordField = document.querySelector('#password-input');
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('bi-eye');
+        this.classList.toggle('bi-eye-slash');
+    });
+
+    document.querySelector('#password-input').addEventListener('input', function() {
+        const val = this.value;
+        const bar = document.getElementById('strength-bar');
+        const text = document.getElementById('strength-text');
+        let score = 0;
+
+        if (val.length > 0) score = 1;
+        if (val.length >= 8) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+
+        const colors = ['#f1f5f9', '#ef4444', '#ef4444', '#f59e0b', '#10b981'];
+        const labels = ['', 'Too Weak', 'Weak', 'Good', 'Strong'];
+
+        bar.style.width = (score * 25) + '%';
+        bar.style.backgroundColor = colors[score];
+        text.innerText = labels[score];
+        text.style.color = colors[score];
+    });
+</script>
+
+</body>
+</html>

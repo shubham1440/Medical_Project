@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Documents</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header">
+            <h5>Clinical Documents</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="doc : ${documents}">
+                    <td th:text="${doc.title}"></td>
+                    <td th:text="${doc.documentType}"></td>
+                    <td th:text="${#temporals.format(doc.documentDate, 'MMM dd, yyyy')}"></td>
+                    <td th:text="${doc.authorName}"></td>
+                    <td>
+                        <button class="btn btn-sm btn-info"
+                                th:onclick="'viewDocument(' + ${doc.id} + ')'">
+                            <i class="bi bi-eye"></i> View
+                        </button>
+                        <button class="btn btn-sm btn-secondary"
+                                th:onclick="'viewHistory(' + ${doc.id} + ')'">
+                            <i class="bi bi-clock-history"></i> History
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

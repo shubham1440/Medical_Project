@@ -1,0 +1,135 @@
+< !DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+    <title layout:fragment="title">Audit Log</title>
+    <style>
+        .audit-table-container {
+            width: 98vw;
+            max-width: 1280px;
+            margin: 28px 0 40px 0;
+            overflow-x: auto;
+            background: #fff;
+            border-radius: 10px;
+            padding: 1.5rem 1rem 2rem 1rem;
+            box-shadow: 0 2px 12px 0 rgba(67,176,42,0.07);
+        }
+        table.audit-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            min-width: 950px;
+        }
+        .audit-table th, .audit-table td {
+            border-bottom: 1px solid #e2e6eb;
+            padding: 0.65em 1.2em;
+            text-align: left;
+            font-size: 1.04em;
+            vertical-align: top;
+        }
+        .audit-table th {
+            background: #f2f8f6;
+            font-weight: 600;
+            color: #26890D;
+            white-space: nowrap;
+        }
+        .audit-table tbody tr:hover {
+            background: #fafafd;
+        }
+        .audit-table td {
+            color: #333;
+            font-size: 1em;
+        }
+        /* Responsive wrapping for long text columns */
+        .audit-table td.description-col {
+            max-width: 320px;
+            white-space: pre-line;
+            word-break: break-word;
+        }
+        @media (max-width: 1050px) {
+            .audit-table-container {
+                padding: .5rem .2rem 1.2rem .2rem;
+            }
+            table.audit-table {
+                font-size: .99em;
+                min-width: 670px;
+            }
+        }
+        @media (max-width: 700px) {
+            table.audit-table, .audit-table th, .audit-table td {
+                font-size: .90em;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Audit Logs</h1>
+    <button onclick="downloadTableAsCSV('audit-log.csv')"
+            style="margin-bottom:18px; background:#43B02A; color:white; padding:8px 18px; border:none; border-radius:6px; font-size:1em; cursor:pointer;">
+        Download CSV
+    </button>
+    <div class="audit-table-container">
+        <table class="audit-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Timestamp</th>
+                <th>Actor</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Description</th>
+                <th>IP Address</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log : ${logs}">
+                <td th:text="${log.id}"></td>
+                <td th:text="${log.timestamp}"></td>
+                <td th:text="${log.actor}"></td>
+                <td th:text="${log.action}"></td>
+                <td th:text="${log.target}"></td>
+                <td th:text="${log.description}" class="description-col"></td>
+                <td th:text="${log.ipAddress}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{/admin/dashboard}">Back to Admin Dashboard</a>
+</div>
+</body>
+<div layout:fragment="scripts">
+    <script>
+        function downloadTableAsCSV(filename) {
+            var table = document.querySelector("table.audit-table");
+            if (!table) return;
+
+            var csv = [];
+            var rows = table.querySelectorAll("tr");
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("th, td");
+                for (var j = 0; j < cols.length; j++) {
+                    // Escape double quotes in cell contents
+                    var cell = cols[j].innerText.replace(/"/g, '""');
+                    if (cell.match(/,|\n|"/)) {
+                        cell = '"' + cell + '"';
+                    }
+                    row.push(cell);
+                }
+                csv.push(row.join(","));
+            }
+            var csvString = csv.join("\n");
+            var blob = new Blob([csvString], { type: "text/csv" });
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</div>
+</html>

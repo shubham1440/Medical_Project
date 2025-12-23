@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<section th:fragment="quick_actions" class="container mb-5" style="margin-top: -80px; position: relative; z-index: 10;">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card-modern p-4 shadow-sm border-0 bg-white">
+                <div class="d-flex justify-content-between mb-4">
+                    <h6 class="fw-bold">Bed Availability</h6>
+                    <span class="small fw-bold text-success"><span class="live-pulse"></span> LIVE</span>
+                </div>
+                <p class="small mb-1">ICU (Level 3)
+                    <span class="float-end fw-bold text-primary" th:text="${icuBeds + ' Free'}">14 Free</span>
+                </p>
+                <div class="progress mb-3" style="height: 6px;">
+                    <div class="progress-bar" th:style="'width:' + ${icuPercent} + '%'"></div>
+                </div>
+                <p class="small mb-1">General Ward
+                    <span class="float-end fw-bold text-primary" th:text="${generalBeds + ' Open'}">42 Open</span>
+                </p>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar bg-info" th:style="'width:' + ${generalPercent} + '%'"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-modern p-4 text-center shadow-sm border-0 bg-white">
+                <h6 class="fw-bold mb-2">Insurance TPAs</h6>
+                <p class="small text-muted mb-3">Supporting cashless treatment via 50+ partners.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <span th:each="tpa : ${topTPAs}"
+                          class="badge bg-light text-dark border p-2"
+                          th:text="${tpa}">Star Health</span>
+
+                    <div class="collapse w-100" id="moreTPAs">
+                        <div class="d-flex flex-wrap justify-content-center gap-2 mt-2">
+                            <span th:each="tpa : ${hiddenTPAs}"
+                                  class="badge bg-light text-dark border p-2"
+                                  th:text="${tpa}">Insurance Name</span>
+                        </div>
+                    </div>
+
+                    <button class="badge bg-primary-light p-2 fw-bold border-0"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#moreTPAs">
+                        +42 More
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-modern p-4 bg-primary text-white border-0 shadow h-100">
+                <h6 class="fw-bold mb-3 text-white">Lab Quick-Access</h6>
+                <p class="small opacity-75 mb-4">Download radiology and blood reports via our secure patient node.</p>
+                <a th:href="@{/login}" class="btn btn-light w-100 rounded-pill fw-bold">My Lab Portal</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .live-pulse {
+            width: 8px; height: 8px; background: #28a745;
+            border-radius: 50%; display: inline-block;
+            margin-right: 5px; box-shadow: 0 0 0 rgba(40, 167, 69, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+    </style>
+</section>
+
+</body>
+</html>
