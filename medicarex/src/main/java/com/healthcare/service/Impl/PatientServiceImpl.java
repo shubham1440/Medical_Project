@@ -129,7 +129,8 @@ public class PatientServiceImpl implements PatientService {
         if (mrn != null && !mrn.isEmpty()) {
             Patient patient = patientRepository.findByMrn(mrn)
                     .orElseThrow(() -> new RuntimeException("Patient not found"));
-            patientPage = Page.empty(pageable);
+//            patientPage = Page.empty(pageable);
+            patientPage = new PageImpl<>(List.of(patient), pageable, 1);
 
             auditService.logAction(
                     "SEARCH_PATIENTS",
