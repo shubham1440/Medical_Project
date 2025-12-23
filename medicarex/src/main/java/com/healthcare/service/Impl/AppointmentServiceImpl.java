@@ -187,6 +187,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (patient == null) {
             log.warn("No patient found with email: {}", phiMaskingUtil.maskEmail(UserEmail));
         }
+//        List<Appointment> appointmentList = appointmentRepository.findAllByPatient_Id(patient.getId());
+//        return toDtoList(appointmentList);
+        if (patient == null) {
+            log.warn("No patient found with email: {}. Returning empty appointment list.", phiMaskingUtil.maskEmail(UserEmail));
+            return Collections.emptyList();
+        }
+
         List<Appointment> appointmentList = appointmentRepository.findAllByPatient_Id(patient.getId());
         return toDtoList(appointmentList);
     }
