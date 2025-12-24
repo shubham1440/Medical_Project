@@ -17,6 +17,23 @@
 
 ---
 
+## 📸 Visual Tour
+
+### 🌐 Landing Page & Access
+*The gateway for patients to explore hospital services and access their accounts.*
+
+| Home Page | Login & Sign-up |
+| :---: | :---: |
+| ![Home Page](screenshots/home.png) | ![Login Page](screenshots/login.png) |
+
+### 👤 Patient & Provider Panels
+*Seamless coordination between the person seeking care and the medical professional.*
+
+| Patient Appointment Dashboard | Doctor Confirmation & Management |
+| :---: | :---: |
+| ![Patient Dashboard](screenshots/patient.png) | ![Doctor Panel](screenshots/doctor.png) |
+| *Patients can book and view history.* | *Doctors confirm appointments & issue prescriptions.* |
+
 ## ✨ Core Features
 
 ### 👤 Patient Portal
