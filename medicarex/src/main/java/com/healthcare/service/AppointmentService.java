@@ -8,6 +8,7 @@ import com.healthcare.models.Provider;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,5 +46,8 @@ public interface AppointmentService {
 
     void markAsComplete(Long id, String providerEmail);
 
+    List<Appointment> findByDate(LocalDate selectedDate);
+
+    List<Appointment> getConfirmedAppointmentsByDate(String name, LocalDate selectedDate);
 }
 
