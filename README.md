@@ -31,7 +31,7 @@
 
 | Patient Appointment Dashboard | Doctor Confirmation & Management |
 | :---: | :---: |
-| ![Patient Dashboard](screenshots/paitent_dashboard1) | ![Doctor Panel](screenshots/doctor_dashboard1.png) |
+| ![Patient Dashboard](screenshots/paitent_dashboard1.png) | ![Doctor Panel](screenshots/doctor_dashboard1.png) |
 | *Patients can book and view history.* | *Doctors confirm appointments & issue prescriptions.* |
 
 ## ✨ Core Features
