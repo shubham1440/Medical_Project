@@ -68,11 +68,12 @@
 
 ```text
 medicarex/
-├── assets/           # Images, logos, and UI icons
-├── css/              # Custom stylesheets (Bootstrap & Custom)
-├── js/               # Client-side validation & AJAX scripts
-├── includes/         # DB connection & reusable components (header/footer)
-├── patient/          # Patient-specific modules & dashboards
-├── doctor/           # Doctor-specific modules & dashboards
-├── admin/            # Administrative management tools
-└── index.php         # Landing page for Gopal Hospital
+├── src/main/java/com/gopal/
+│   ├── controller/      # Route mapping (Home, Admin, Patient, Doctor)
+│   ├── service/         # Appointment & Confirmation logic
+│   ├── entity/          # User, Appointment, and Schedule models
+│   └── repository/      # JPA Data Access
+├── src/main/resources/
+│   ├── templates/       # Thymeleaf HTML (admin/, patient/, doctor/ folders)
+│   └── static/          # CSS, JS, and Images
+└── screenshots/         # Project UI images
