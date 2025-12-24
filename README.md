@@ -1,51 +1,61 @@
-🏥 Gopal Hospital - MedicareX
-MedicareX is a web-based Healthcare Management System designed for Gopal Hospital. This platform simplifies the interaction between patients and healthcare providers by digitizing appointment scheduling, record management, and hospital administration.
+# 🏥 Gopal Hospital - MedicareX 
+> A modern, web-based Medical Management System designed to bridge the gap between patients and healthcare providers.
 
-<img width="2023" height="2048" alt="image" src="https://github.com/user-attachments/assets/4cf2d6c2-9f07-451f-bd6f-56e623ddb495" />
+[![Build Status](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/shubham1440/Medical_Project)
+[![Platform](https://img.shields.io/badge/platform-Web-blue.svg)](https://github.com/shubham1440/Medical_Project)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-📋 Table of Contents
-Features
+---
 
-System Architecture
+## 📌 Project Overview
+**MedicareX** is a comprehensive digital solution developed for **Gopal Hospital**. It replaces traditional paper-based systems with a streamlined digital workflow for managing patient registrations, doctor consultations, and hospital administration.
 
-Tech Stack
+### 🎯 Objective
+* To provide 24/7 online appointment booking for patients.
+* To organize medical records and patient history for doctors.
+* To automate billing and staff management for hospital administrators.
 
-Getting Started
+---
 
-Project Structure
+## ✨ Core Features
 
-Contributing
+### 👤 Patient Portal
+* **One-Click Appointment:** Book visits based on symptoms or specialty.
+* **Medical Vault:** View past prescriptions and lab reports online.
+* **Profile Management:** Update personal and emergency contact details.
 
-✨ Features
-Patient Module
-Self-Registration: Quick sign-up for new patients.
+### 👨‍⚕️ Doctor Portal
+* **Live Queue:** See the list of scheduled patients for the day.
+* **Patient History:** Access longitudinal health records during consultation.
+* **Digital Prescription:** Generate and print prescriptions instantly.
 
-Appointment Booking: Select specialty, doctor, and preferred time slots.
+### 🛡️ Admin Dashboard
+* **Staff Management:** Manage doctor shifts and nursing staff.
+* **Inventory Control:** Monitor medicine stocks and hospital supplies.
+* **Financial Reports:** Track daily/monthly revenue and billing status.
 
-Prescription View: Access digital copies of prescriptions and test results.
+---
 
-Doctor Module
-Patient Records: View medical history and previous visits.
+## 🛠️ Technical Stack
 
-Schedule Management: Track daily appointments and availability.
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | HTML5, CSS3, JavaScript, Bootstrap |
+| **Backend** | PHP (Core) |
+| **Database** | MySQL |
+| **Server** | Apache (XAMPP / WAMP) |
 
-E-Prescriptions: Generate digital prescriptions during consultations.
+---
 
-Administrative Module
-Department Management: Add/Remove hospital departments and specialists.
+## 📂 Project Structure
 
-System Logs: Monitor activities and user management.
-
-Billing: Basic invoicing and payment status tracking.
-
-🏗 System Architecture
-The project follows a standard Web Architecture where the client interacts with a server-side engine to perform CRUD (Create, Read, Update, Delete) operations on a database.
-
-🛠 Tech Stack
-Frontend: HTML5, CSS3, JavaScript (Bootstrap 4/5)
-
-Backend: PHP (Server-side scripting)
-
-Database: MySQL (Relational database management)
-
-Server: Apache (XAMPP/WAMP environment)
+```text
+medicarex/
+├── assets/           # Images, logos, and UI icons
+├── css/              # Custom stylesheets (Bootstrap & Custom)
+├── js/               # Client-side validation & AJAX scripts
+├── includes/         # DB connection & reusable components (header/footer)
+├── patient/          # Patient-specific modules & dashboards
+├── doctor/           # Doctor-specific modules & dashboards
+├── admin/            # Administrative management tools
+└── index.php         # Landing page for Gopal Hospital
