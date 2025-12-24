@@ -16,7 +16,6 @@ import com.healthcare.service.AppointmentService;
 import com.healthcare.service.AuditService;
 import com.healthcare.util.PHIMaskingUtil;
 import com.healthcare.util.excpetion.AppointmentNotFoundException;
-import com.healthcare.util.excpetion.ProviderNotFoundException;
 import com.healthcare.util.excpetion.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +23,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Collections;
+
+import java.util.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -95,7 +94,6 @@ public class AppointmentServiceImpl implements AppointmentService {
             patient = patientRepository.findByUserId(user.getId())
                     .orElseThrow(() -> new RuntimeException("Patient not found for user id: " + phiMaskingUtil.maskMRN(user.getId().toString())));
             if (patient == null) {
-                log.warn("No patient found with email: {}", patientEmail);
                 throw new IllegalArgumentException("Patient does not exist: " + phiMaskingUtil.maskEmail(patientEmail));
             }
         } catch (Exception e) {
@@ -351,5 +349,30 @@ public class AppointmentServiceImpl implements AppointmentService {
         auditService.logAction("COMPLETE_APPOINTMENT", "Appointment", id,
                 "Marked appointment as completed by provider: " + phiMaskingUtil.maskEmail(providerEmail));
         log.info("Appointment [{}] marked as COMPLETED by provider [{}].", id, phiMaskingUtil.maskEmail(providerEmail));
+    }
+
+    @Override
+    public List<Appointment> findByDate(LocalDate selectedDate) {
+        // Converts LocalDate to a full 24-hour range
+        LocalDateTime startOfDay = selectedDate.atStartOfDay();
+        LocalDateTime endOfDay = selectedDate.atTime(LocalTime.MAX);
+        return appointmentRepository.findByStartTimeBetween(startOfDay, endOfDay);
+    }
+
+    @Override
+    public List<Appointment> getConfirmedAppointmentsByDate(String email, LocalDate selectedDate) {
+        // Define the 24-hour window for the selected date
+        LocalDateTime startOfDay = selectedDate.atStartOfDay();
+        LocalDateTime endOfDay = selectedDate.atTime(LocalTime.MAX);
+
+        // Fetch from repository using nested provider email property
+        List<Appointment> appointments = appointmentRepository
+                .findByProviderEmailAndStartTimeBetween(email, startOfDay, endOfDay);
+
+        // Filter for CONFIRMED status and sort by time for a clean dashboard view
+        return appointments.stream()
+                        .filter(a -> a.getStatus() == AppointmentStatus.CONFIRMED)
+                        .sorted(Comparator.comparing(Appointment::getStartTime))
+                        .collect(Collectors.toList());
     }
 }

@@ -60,5 +60,10 @@ public class User extends BaseEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Provider provider;
+
+
+    public String getFullName() {
+        return (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "");
+    }
 }
 
