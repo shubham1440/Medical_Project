@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gopal Hospital | Secure API Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand: #0f172a;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --surface: rgba(255, 255, 255, 0.8); /* Slightly more transparent */
+            --border: rgba(255, 255, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background-color: #0f172a; /* Fallback color */
+        }
+
+        /* Background Image Layer */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Replace the URL below with your hospital background image */
+            background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.6) blur(4px); /* Darkens and blurs the bg for better readability */
+            z-index: -1;
+            transform: scale(1.1); /* Prevents white edges from the blur */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            z-index: 1;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--surface);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            border-radius: 28px;
+            padding: 48px 40px;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 100px;
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 30px;
+            font-weight: 800;
+            margin: 0;
+            color: var(--brand);
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #475569;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .input-control-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            height: 54px;
+            padding: 0 16px;
+            padding-right: 48px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            color: var(--brand);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover { color: var(--primary); }
+
+        .btn-unlock {
+            width: 100%;
+            height: 54px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .btn-unlock:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        .error-toast {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            color: #9f1239;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            margin-bottom: 24px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading .loader { display: block; }
+        .loading .btn-text { display: none; }
+
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .footer strong { color: #ffffff; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <span class="brand-badge">Authorized Personnel Only</span>
+            <h1>Gopal Hospital</h1>
+            <p class="subtitle">API Documentation Gateway</p>
+        </div>
+
+        <div id="errorBox" class="error-toast">
+            <span>⚠️</span>
+            <span id="errorMessage">Authentication failed.</span>
+        </div>
+
+        <form id="docsForm" th:action="@{/docs-login}" method="post">
+            <div class="form-group">
+                <label for="accessKey">Access Key</label>
+                <div class="input-control-wrapper">
+                    <input type="password" id="accessKey" name="accessKey"
+                           placeholder="Enter security token..." required autofocus>
+                    <button type="button" class="toggle-password" id="toggleBtn" title="Toggle Visibility">
+                        👁️
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-unlock">
+                <div class="loader"></div>
+                <span class="btn-text">Unlock Resources</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 <strong>Gopal IT Security</strong> • Secure Medical Gateway
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorBox = document.getElementById('errorBox');
+    const errorMsg = document.getElementById('errorMessage');
+    const form = document.getElementById('docsForm');
+    const btn = document.getElementById('submitBtn');
+    const passInput = document.getElementById('accessKey');
+    const toggleBtn = document.getElementById('toggleBtn');
+
+    if (urlParams.has('error')) {
+        errorBox.style.display = 'flex';
+        if (urlParams.has('message')) {
+            errorMsg.innerText = decodeURIComponent(urlParams.get('message'));
+        }
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passInput.setAttribute('type', type);
+        toggleBtn.innerText = type === 'password' ? '👁️' : '🙈';
+    });
+
+    form.onsubmit = () => {
+        btn.classList.add('loading');
+        btn.disabled = true;
+    };
+</script>
+
+</body>
+</html>
