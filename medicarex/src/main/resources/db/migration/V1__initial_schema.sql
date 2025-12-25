@@ -1,4 +1,4 @@
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE users(
     INDEX idx_user_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE user_roles (
+CREATE TABLE IF NOT EXISTS user_roles (
     user_id BIGINT NOT NULL,
     role VARCHAR(20) NOT NULL,
     PRIMARY KEY (user_id, role),
@@ -27,7 +27,7 @@ CREATE TABLE user_roles (
         REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE patients (
+CREATE TABLE IF NOT EXISTS patients (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     first_name VARCHAR(100) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE patients (
         REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE providers (
+CREATE TABLE IF NOT EXISTS providers (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     first_name VARCHAR(100) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE providers (
         REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE provider_panels (
+CREATE TABLE IF NOT EXISTS provider_panels (
     provider_id BIGINT NOT NULL,
     patient_id BIGINT NOT NULL,
     assigned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -91,7 +91,7 @@ CREATE TABLE provider_panels (
         REFERENCES patients(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE appointments (
+CREATE TABLE IF NOT EXISTS appointments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     patient_id BIGINT NOT NULL,
     provider_id BIGINT NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE appointments (
         REFERENCES providers(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE encounters (
+CREATE TABLE IF NOT EXISTS encounters (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     patient_id BIGINT NOT NULL,
     provider_id BIGINT NOT NULL,
@@ -152,7 +152,7 @@ CREATE TABLE encounters (
         REFERENCES appointments(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE prescriptions (
+CREATE TABLE IF NOT EXISTS prescriptions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     patient_id BIGINT NOT NULL,
     provider_id BIGINT NOT NULL,
@@ -184,7 +184,7 @@ CREATE TABLE prescriptions (
         REFERENCES prescriptions(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE lab_orders (
+CREATE TABLE IF NOT EXISTS lab_orders (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     patient_id BIGINT NOT NULL,
     ordering_provider_id BIGINT NOT NULL,
@@ -209,7 +209,7 @@ CREATE TABLE lab_orders (
         REFERENCES providers(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE lab_results (
+CREATE TABLE IF NOT EXISTS lab_results (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     lab_order_id BIGINT NOT NULL,
     result_code VARCHAR(50) NOT NULL,
@@ -238,7 +238,7 @@ CREATE TABLE lab_results (
         REFERENCES lab_results(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE clinical_documents (
+CREATE TABLE IF NOT EXISTS clinical_documents (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     patient_id BIGINT NOT NULL,
     author_id BIGINT NOT NULL,
@@ -269,7 +269,7 @@ CREATE TABLE clinical_documents (
         REFERENCES clinical_documents(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE consents (
+CREATE TABLE IF NOT EXISTS consents (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     patient_id BIGINT NOT NULL,
     provider_id BIGINT,
@@ -294,7 +294,7 @@ CREATE TABLE consents (
         REFERENCES providers(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE audit_events (
+CREATE TABLE IF NOT EXISTS audit_events (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     actor_id BIGINT NOT NULL,
     action VARCHAR(50) NOT NULL,
@@ -312,7 +312,7 @@ CREATE TABLE audit_events (
     INDEX idx_audit_action (action)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE idempotency_records (
+CREATE TABLE IF NOT EXISTS idempotency_records (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     idempotency_key VARCHAR(64) NOT NULL UNIQUE,
     request_hash VARCHAR(64) NOT NULL,
@@ -323,3 +323,5 @@ CREATE TABLE idempotency_records (
     INDEX idx_idempotency_key (idempotency_key),
     INDEX idx_idempotency_expires (expires_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS api_client;

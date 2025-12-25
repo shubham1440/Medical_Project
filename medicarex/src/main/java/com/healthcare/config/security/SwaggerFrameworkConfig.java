@@ -8,21 +8,33 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
+//@Configuration
+//@OpenAPIDefinition(
+//        info = @Info(title = "Gopal Hospital API", version = "1.0"),
+//        security = @SecurityRequirement(name = "ApiKeyAuth")
+//)
+//@SecurityScheme(
+//        name = "ApiKeyAuth",
+//        type = SecuritySchemeType.APIKEY,
+//        in = SecuritySchemeIn.HEADER,
+//        paramName = "X-API-KEY", // This MUST match request.getHeader("X-API-KEY")
+//        description = "Please enter your Gopal Hospital Security Key."
+//)
+//public class SwaggerFrameworkConfig {
+//}
+
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(
-                title = "Gopal Hospital API",
-                version = "1.0",
-                description = "Security: Account locks after 3 failed attempts."
-        ),
-        // This MUST match the 'name' attribute in @SecurityScheme below
-        security = @SecurityRequirement(name = "X-API-KEY")
+        info = @Info(title = "Gopal Hospital API", version = "1.0"),
+        // This tells Swagger that the definition fetch itself requires this security scheme
+        security = @SecurityRequirement(name = "ApiKeyAuth")
 )
 @SecurityScheme(
-        name = "X-API-KEY",               // The actual header key & the reference name
+        name = "ApiKeyAuth",
         type = SecuritySchemeType.APIKEY,
         in = SecuritySchemeIn.HEADER,
-        description = "Enter your API Key. If you fail 3 times, contact admin@gopalhospital.com"
+        paramName = "X-API-KEY",
+        description = "Enter your Gopal Hospital Security Key"
 )
 public class SwaggerFrameworkConfig {
 }

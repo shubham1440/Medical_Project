@@ -1,11 +1,15 @@
 package com.healthcare.config.security;
 
+import com.healthcare.service.ApiKeyManager;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -30,22 +35,24 @@ public class SecurityConfig {
      */
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
+    private final ApiKeyManager apiKeyManager;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
                                 "/home",
                                 "/api/auth/**",
-                                "/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
                                 "/actuator/health",
+                                "/docs-login",
+                                "/api-docs/**",      // ADD THIS: Permitted here so Spring doesn't redirect
+                                "/swagger-ui/**",    // ADD THIS: Permitted here
+                                "/swagger-ui.html",  // ADD THIS: Permitted here
                                 "/actuator/prometheus",
                                 "/css/**",
                                 "/js/**",
@@ -78,20 +85,27 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((req, res, e) ->
-                                res.sendRedirect("/login")
+                        // This handles unauthorized AJAX/Direct calls to api-docs
+                        .defaultAuthenticationEntryPointFor(
+                                (req, res, e) -> {
+                                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                    res.setContentType("application/json");
+                                    res.getWriter().write("{\"message\": \"Access Key Required\"}");
+                                },
+                                new AntPathRequestMatcher("/api-docs/**")
                         )
+                        .authenticationEntryPoint((req, res, e) -> res.sendRedirect("/login"))
                 )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
 
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ApiKeyAuthenticationFilter(apiKeyManager), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
