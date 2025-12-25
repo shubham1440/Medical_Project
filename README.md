@@ -51,6 +51,25 @@
 * **Inventory Control:** Monitor medicine stocks and hospital supplies.
 * **Financial Reports:** Track daily/monthly revenue and billing status.
 
+
+🛡️ Security & API Gateway
+Secure API Docs: Swagger UI is gated behind a modern login gate.
+
+Dynamic Sessions: User-specific session timeouts managed via the database.
+
+Real-time Protection: Custom filters check API key validity and lock status on every request.
+
+---
+
+🚀 API Documentation (Secure Access)
+The system exposes a robust REST API for integration with lab systems and pharmacy modules.
+
+URL: /swagger-ui/index.html
+
+Security Layer: Gated by a custom ApiKeyAuthenticationFilter.
+
+Access Control: Requires a valid Security Access Key stored in the database.
+
 ---
 
 ## 🛠️ Technical Stack
