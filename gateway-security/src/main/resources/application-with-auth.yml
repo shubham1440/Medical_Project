@@ -1,0 +1,46 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:certs/gateway-keystore.p12
+    key-store-password: ${KEYSTORE_PASSWORD:changeit}
+    key-store-type: PKCS12
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8080/realms/medicarex}
+            user-name-attribute: preferred_username
+
+        registration:
+          keycloak:
+            client-id: ${OAUTH2_CLIENT_ID:gateway-client}
+            client-secret: ${OAUTH2_CLIENT_SECRET:secret}
+            scope: openid,profile,email,hospital.read,hospital.write
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+      resourceserver:
+        jwt:
+          issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8080/realms/medicarex}
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: ehr-service
+              uri: lb://ehr-service
+              predicates:
+                - Path=/api/ehr/**
+              filters:
+                - StripPrefix=2
+                - TokenRelay=
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter:
+                      replenishRate: 100
+                      burstCapacity: 200
