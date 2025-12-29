@@ -50,9 +50,9 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/actuator/health",
                                 "/docs-login",
-                                "/api-docs/**",      // ADD THIS: Permitted here so Spring doesn't redirect
-                                "/swagger-ui/**",    // ADD THIS: Permitted here
-                                "/swagger-ui.html",  // ADD THIS: Permitted here
+                                "/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
                                 "/actuator/prometheus",
                                 "/css/**",
                                 "/js/**",

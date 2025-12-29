@@ -1,273 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org"-->
-<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
-<!--      layout:decorate="~{layout}" lang="">-->
-<!--<head>-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">-->
-<!--    <th:block layout:fragment="head">-->
-<!--        <style>-->
-<!--            .appointment-row { transition: background-color 0.2s ease; cursor: pointer; }-->
-<!--            .appointment-row:hover { background-color: rgba(0, 123, 255, 0.05); }-->
-<!--            .modal-content { border-radius: 1.5rem !important; }-->
-<!--            .form-control-sm { font-size: 0.95rem; }-->
-<!--            .table > :not(:first-child) { border-top: 0; }-->
-<!--            th, td { vertical-align: middle !important; }-->
-<!--            .btn-outline-success, .btn-outline-danger {-->
-<!--                width: 2rem; height: 2rem; padding: 0;-->
-<!--                display: flex; align-items: center; justify-content: center;-->
-<!--            }-->
-<!--            .modal-header { border-top: 4px solid #0d6efd; }-->
-<!--        </style>-->
-<!--    </th:block>-->
-<!--    <title>Today's Appointments</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div layout:fragment="content">-->
-<!--    <div class="container py-4">-->
-<!--        <div class="d-flex justify-content-between align-items-center mb-4">-->
-<!--            <h2 class="mb-0">-->
-<!--                <i class="bi bi-calendar-check me-2"></i>-->
-<!--                Today's Appointments-->
-<!--            </h2>-->
-<!--            <span class="badge bg-primary rounded-pill" th:text="${appointments.size()} + ' appointments'">0 appointments</span>-->
-<!--        </div>-->
-<!--        <div class="card shadow-sm border-0">-->
-<!--            <div class="table-responsive">-->
-<!--                <table class="table table-hover align-middle mb-0">-->
-<!--                    <thead class="table-light">-->
-<!--                    <tr>-->
-<!--                        <th scope="col" class="ps-4"><i class="bi bi-clock me-1"></i> Date & Time</th>-->
-<!--                        <th scope="col"><i class="bi bi-person me-1"></i> Patient</th>-->
-<!--                        <th scope="col"><i class="bi bi-chat-left-text me-1"></i> Reason</th>-->
-<!--                        <th scope="col" class="pe-4"><i class="bi bi-check-circle me-1"></i> Status</th>-->
-<!--                        <th scope="col"><i class="bi bi-flag me-1"></i> Mark</th>-->
-<!--                        <th scope="col"><i class="bi bi-file-earmark-medical me-1"></i> Prescription</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-<!--                    <tr th:each="appt : ${appointments}" class="appointment-row">-->
-<!--                        <td class="ps-4" th:text="${appt.startTime}"></td>-->
-<!--                        <td><div class="fw-medium" th:text="${appt.patientName}"></div></td>-->
-<!--                        <td><span th:text="${appt.reason}"></span></td>-->
-<!--                        <td class="pe-4">-->
-<!--                                <span class="badge rounded-pill"-->
-<!--                                      th:classappend="${appt.status == 'CONFIRMED' ? 'bg-success' :-->
-<!--                                                        appt.status == 'PENDING' ? 'bg-warning text-dark' :-->
-<!--                                                        appt.status == 'CANCELLED' ? 'bg-danger' : 'bg-secondary'}"-->
-<!--                                      th:text="${appt.status}"></span>-->
-<!--                        </td>-->
-<!--                        <td>-->
-<!--                            <form th:action="@{/provider/appointments/{id}/complete(id=${appt.id})}" method="post" style="display:inline">-->
-<!--                                <button type="submit" class="btn btn-secondary btn-sm">-->
-<!--                                    <i class="bi bi-flag"></i> Mark as Complete-->
-<!--                                </button>-->
-<!--                            </form>-->
-<!--                        </td>-->
-<!--                        <td>-->
-<!--                            <button type="button"-->
-<!--                                    class="btn btn-success btn-sm"-->
-<!--                                    data-bs-toggle="modal"-->
-<!--                                    th:data-bs-target="'#prescriptionModal_' + ${appt.id}">-->
-<!--                                <i class="bi bi-file-earmark-plus"></i> Prescription-->
-<!--                            </button>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                    <tr th:if="${#lists.isEmpty(appointments)}">-->
-<!--                        <td colspan="6" class="text-center py-5">-->
-<!--                            <div class="text-muted">-->
-<!--                                <i class="bi bi-calendar-x fs-1 d-block mb-3"></i>-->
-<!--                                <p class="mb-0">No confirmed appointments today.</p>-->
-<!--                                <small>Check back later or view your schedule.</small>-->
-<!--                            </div>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-<!--                </table>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div th:each="appt : ${appointments}">-->
-<!--            <div class="modal fade"-->
-<!--                 th:id="'prescriptionModal_' + ${appt.id}"-->
-<!--                 tabindex="-1"-->
-<!--                 th:attr="aria-labelledby='prescriptionModalLabel_' + ${appt.id}"-->
-<!--                 aria-hidden="true">-->
-<!--                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">-->
-<!--                    <div class="modal-content rounded-4 shadow-lg border-0">-->
-<!--                        <form th:action="@{/provider/prescriptions}" method="post">-->
-<!--                            <div class="modal-header bg-light border-bottom-0 rounded-top-4">-->
-<!--                                <div class="d-flex align-items-center gap-2">-->
-<!--                                    <span class="badge bg-primary fs-5 p-2"><i class="bi bi-capsule p-0"></i></span>-->
-<!--                                    <h5 class="modal-title mb-0"-->
-<!--                                        th:id="'prescriptionModalLabel_' + ${appt.id}">-->
-<!--                                        Prescribe for <span th:text="${appt.patientName}" class="fw-semibold"></span>-->
-<!--                                    </h5>-->
-<!--                                </div>-->
-<!--                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                            </div>-->
-<!--                            <div class="modal-body pb-0">-->
-<!--                                <input type="hidden" name="appointmentId" th:value="${appt.id}" />-->
-<!--                                <input type="hidden" name="patientId" th:value="${appt.patientId}" />-->
-<!--                                <h6 class="mt-2 mb-1"><i class="bi bi-capsule"></i> Medicines</h6>-->
-<!--                                <div class="table-responsive rounded-3 mb-4">-->
-<!--                                    <table class="table align-middle table-hover table-borderless mb-0" style="background:#f9fafe;">-->
-<!--                                        <thead class="table-light">-->
-<!--                                        <tr>-->
-<!--                                            <th>Medication</th>-->
-<!--                                            <th>Dosage</th>-->
-<!--                                            <th>Route</th>-->
-<!--                                            <th>Frequency</th>-->
-<!--                                            <th>Duration<br><small>(days)</small></th>-->
-<!--                                            <th>Start Date</th>-->
-<!--                                            <th>Instructions</th>-->
-<!--                                            <th class="text-center">-->
-<!--                                                <button type="button"-->
-<!--                                                        class="btn btn-outline-success btn-sm rounded-circle add-medicine-row"-->
-<!--                                                        title="Add Medicine"-->
-<!--                                                        data-bs-toggle="tooltip">-->
-<!--                                                    <i class="bi bi-plus-lg"></i>-->
-<!--                                                </button>-->
-<!--                                            </th>-->
-<!--                                        </tr>-->
-<!--                                        </thead>-->
-<!--                                        <tbody th:id="'medicinesTableBody_' + ${appt.id}">-->
-<!--                                        <tr>-->
-<!--                                            <td><input type="text" name="medicines[0].medicationName" class="form-control form-control-sm rounded-3" required placeholder="Name" /></td>-->
-<!--                                            <td><input type="text" name="medicines[0].dosage" class="form-control form-control-sm rounded-3" required placeholder="Ex: 10mg" /></td>-->
-<!--                                            <td><input type="text" name="medicines[0].route" class="form-control form-control-sm rounded-3" required placeholder="Ex: Oral" /></td>-->
-<!--                                            <td><input type="text" name="medicines[0].frequency" class="form-control form-control-sm rounded-3" required placeholder="Ex: 2x daily" /></td>-->
-<!--                                            <td><input type="number" name="medicines[0].durationDays" class="form-control form-control-sm rounded-3" required min="1" placeholder="Ex: 7" /></td>-->
-<!--                                            <td><input type="date" name="medicines[0].startDate" class="form-control form-control-sm rounded-3" /></td>-->
-<!--                                            <td><input type="text" name="medicines[0].instructions" class="form-control form-control-sm rounded-3" placeholder="Special instructions" /></td>-->
-<!--                                            <td class="text-center">-->
-<!--                                                <button type="button"-->
-<!--                                                        class="btn btn-outline-danger btn-sm rounded-circle remove-medicine-row"-->
-<!--                                                        title="Remove Medicine"-->
-<!--                                                        data-bs-toggle="tooltip">-->
-<!--                                                    <i class="bi bi-dash-lg"></i>-->
-<!--                                                </button>-->
-<!--                                            </td>-->
-<!--                                        </tr>-->
-<!--                                        </tbody>-->
-<!--                                    </table>-->
-<!--                                </div>-->
-<!--                                <h6 class="mt-4 mb-1"><i class="bi bi-flask"></i> Lab Tests</h6>-->
-<!--                                <div class="table-responsive rounded-3">-->
-<!--                                    <table class="table align-middle table-hover table-borderless mb-0" style="background:#faf9fe;">-->
-<!--                                        <thead class="table-light">-->
-<!--                                        <tr>-->
-<!--                                            <th>Test Name</th>-->
-<!--                                            <th>Instructions</th>-->
-<!--                                            <th class="text-center">-->
-<!--                                                <button type="button"-->
-<!--                                                        class="btn btn-outline-success btn-sm rounded-circle add-test-row"-->
-<!--                                                        title="Add Test"-->
-<!--                                                        data-bs-toggle="tooltip">-->
-<!--                                                    <i class="bi bi-plus-lg"></i>-->
-<!--                                                </button>-->
-<!--                                            </th>-->
-<!--                                        </tr>-->
-<!--                                        </thead>-->
-<!--                                        <tbody th:id="'testsTableBody_' + ${appt.id}">-->
-<!--                                        <tr>-->
-<!--                                            <td><input type="text" name="tests[0].testName" class="form-control form-control-sm rounded-3" placeholder="e.g. CBC" /></td>-->
-<!--                                            <td><input type="text" name="tests[0].instructions" class="form-control form-control-sm rounded-3" placeholder="Special instructions" /></td>-->
-<!--                                            <td class="text-center">-->
-<!--                                                <button type="button"-->
-<!--                                                        class="btn btn-outline-danger btn-sm rounded-circle remove-test-row"-->
-<!--                                                        title="Remove Test"-->
-<!--                                                        data-bs-toggle="tooltip">-->
-<!--                                                    <i class="bi bi-dash-lg"></i>-->
-<!--                                                </button>-->
-<!--                                            </td>-->
-<!--                                        </tr>-->
-<!--                                        </tbody>-->
-<!--                                    </table>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="modal-footer bg-light border-top-0 rounded-bottom-4">-->
-<!--                                <button type="submit" class="btn btn-primary px-4">-->
-<!--                                    <i class="bi bi-send"></i> Submit Prescription-->
-<!--                                </button>-->
-<!--                            </div>-->
-<!--                        </form>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--<div layout:fragment="scripts">-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
-<!--    <script>-->
-<!--        document.addEventListener('click', function (e) {-->
-<!--            if (e.target.closest('.btn-outline-success.add-medicine-row')) {-->
-<!--                const btn = e.target.closest('.btn-outline-success.add-medicine-row');-->
-<!--                const table = btn.closest('table');-->
-<!--                const tbody = table.querySelector('tbody');-->
-<!--                const rows = tbody.querySelectorAll('tr');-->
-<!--                const idx = rows.length;-->
-<!--                const newRow = rows[0].cloneNode(true);-->
-
-<!--                newRow.querySelectorAll('input').forEach(input => {-->
-<!--                    input.value = '';-->
-<!--                    if (input.name) {-->
-<!--                        input.name = input.name.replace(/{{{{\[\d+\]}}}}/, '[' + idx + ']');-->
-<!--                    }-->
-<!--                });-->
-<!--                tbody.appendChild(newRow);-->
-<!--                newRow.querySelector('input')?.focus();-->
-<!--                e.preventDefault();-->
-<!--            }-->
-
-<!--            if (e.target.closest('.btn-outline-danger.remove-medicine-row')) {-->
-<!--                const btn = e.target.closest('.btn-outline-danger.remove-medicine-row');-->
-<!--                const tbody = btn.closest('tbody');-->
-<!--                if (tbody && tbody.rows.length > 1) {-->
-<!--                    btn.closest('tr').remove();-->
-<!--                }-->
-<!--                e.preventDefault();-->
-<!--            }-->
-
-<!--            if (e.target.closest('.btn-outline-success.add-test-row')) {-->
-<!--                const btn = e.target.closest('.btn-outline-success.add-test-row');-->
-<!--                const table = btn.closest('table');-->
-<!--                const tbody = table.querySelector('tbody');-->
-<!--                const rows = tbody.querySelectorAll('tr');-->
-<!--                const idx = rows.length;-->
-<!--                const newRow = rows[0].cloneNode(true);-->
-
-<!--                newRow.querySelectorAll('input').forEach(input => {-->
-<!--                    input.value = '';-->
-<!--                    if (input.name) {-->
-<!--                        input.name = input.name.replace(/{{{{\[\d+\]}}}}/, '[' + idx + ']');-->
-<!--                    }-->
-<!--                });-->
-<!--                tbody.appendChild(newRow);-->
-<!--                newRow.querySelector('input')?.focus();-->
-<!--                e.preventDefault();-->
-<!--            }-->
-
-<!--            if (e.target.closest('.btn-outline-danger.remove-test-row')) {-->
-<!--                const btn = e.target.closest('.btn-outline-danger.remove-test-row');-->
-<!--                const tbody = btn.closest('tbody');-->
-<!--                if (tbody && tbody.rows.length > 1) {-->
-<!--                    btn.closest('tr').remove();-->
-<!--                }-->
-<!--                e.preventDefault();-->
-<!--            }-->
-<!--        });-->
-<!--        document.addEventListener('DOMContentLoaded', function () {-->
-<!--            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))-->
-<!--            tooltipTriggerList.forEach(function (tooltipTriggerEl) {-->
-<!--                new bootstrap.Tooltip(tooltipTriggerEl)-->
-<!--            });-->
-<!--        });-->
-<!--    </script>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -295,6 +25,10 @@
                 border: 1px solid rgba(255,255,255,0.4);
                 border-radius: 24px;
             }
+
+            .btn-back { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 14px; background: white; border: 1px solid #e2e8f0; color: #1e293b; text-decoration: none; transition: 0.2s; }
+            .btn-back:hover { background: var(--primary); color: white; transform: translateX(-3px); }
+
 
             /* Patient Avatar & Pulse */
             .avatar-container { position: relative; width: 52px; height: 52px; }
@@ -349,7 +83,8 @@
         <div class="row g-4 mb-4">
             <div class="col-xl-8">
                 <div class="glass-panel p-4 d-flex align-items-center justify-content-between h-100 shadow-sm border-0">
-                    <div>
+                    <div class="d-flex align-items-center gap-3">
+                        <a th:href="@{/provider/dashboard}" class="btn-back shadow-sm"><i class="bi bi-arrow-left fs-5"></i></a>
                         <h2 class="fw-bold mb-1">Clinical Workspace</h2>
                         <p class="text-muted mb-0"><i class="bi bi-calendar-check text-primary me-2"></i> Date: <span class="fw-bold" th:text="${selectedDate}"></span></p>
                     </div>
@@ -435,6 +170,12 @@
                                 <a th:href="@{/provider/prescriptions/pdf/{id}(id=${appt.id})}" class="btn btn-sm btn-outline-danger btn-suite" title="Download PDF">
                                     <i class="bi bi-file-earmark-pdf"></i>
                                 </a>
+                                <form th:if="${appt.status.name() == 'CONFIRMED'}" th:action="@{/provider/appointments/{id}/cancel(id=${appt.id})}" method="post"
+                                      onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-warning btn-suite" title="Cancel Appointment" style="color: #f72585; border-color: #f72585;">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -589,3 +330,5 @@
 </th:block>
 </body>
 </html>
+
+

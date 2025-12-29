@@ -38,23 +38,6 @@ public class AuthController {
         return "register";
     }
 
-//    @PostMapping("/register")
-//    public String registerUser(@ModelAttribute("registerRequest") @Valid CreatePatientRequest request,
-//                               BindingResult result,
-//                               Model model) {
-//        if (result.hasErrors()) {
-//            return "register";
-//        }
-//
-//        try {
-//            patientService.createPatient(request);
-//            return "redirect:/login?registered=true";
-//        } catch (Exception e) {
-//            model.addAttribute("registrationError", e.getMessage());
-//            return "register";
-//        }
-//    }
-
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("registerRequest") @Valid CreatePatientRequest request,
                                BindingResult result,
@@ -76,25 +59,6 @@ public class AuthController {
     public String showSuccessPage() {
         return "fragments/registration-success";
     }
-
-//    @GetMapping("/")
-//    public String index(Authentication authentication) {
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            return "redirect:/my";
-//        }
-//        List<SpecialityDTO> specialities = Arrays.asList(
-//                new SpecialityDTO("Cardiac Care", "bi bi-heart-pulse text-danger", "cardiac"),
-//                new SpecialityDTO("Cancer Care", "bi bi-shield-plus text-primary", "cancer"),
-//                new SpecialityDTO("Neurosciences", "bi bi-brain text-info", "neuro")
-//        );
-//        model.addAttribute("specialityList", specialities);
-//        return "home";
-//    }
-//
-//    @GetMapping("/home")
-//    public String homePage() {
-//        return "home";
-//    }
 
     @GetMapping("/")
     public String index(Authentication authentication, Model model) {
