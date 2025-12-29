@@ -1,6 +1,7 @@
 package com.healthcare.controller.provider;
 
 
+import com.healthcare.dto.AppointmentDTO;
 import com.healthcare.models.Appointment;
 import com.healthcare.service.AppointmentService;
 import com.healthcare.service.ProviderService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -27,6 +29,7 @@ public class ProviderController {
     @GetMapping("/provider/dashboard")
     public String dashboard(Model model, Authentication auth) {
         String email = auth.getName();
+        List<AppointmentDTO> appointments = appointmentService.getTodaysConfirmedAppointments(email);
 
         model.addAttribute("username", email);
         model.addAttribute("todaysAppointments",
@@ -35,16 +38,9 @@ public class ProviderController {
                 appointmentService.countRequestedAppointments(email));
         model.addAttribute("assignedPatients",
                 providerService.countAssignedPatients(email));
-
+        model.addAttribute("appointments", appointments != null ? appointments : Collections.emptyList());
         return "dashboard/provider/dashboard";
     }
-
-//    @GetMapping("/provider/worklist")
-//    public String worklist(Model model, Authentication auth) {
-//        model.addAttribute("appointments",
-//                appointmentService.getTodaysConfirmedAppointments(auth.getName()));
-//        return "dashboard/provider/worklist";
-//    }
 
     @GetMapping("/provider/worklist")
     public String getProviderWorklist(
