@@ -71,6 +71,9 @@ public class SecurityConfig {
                         .requestMatchers("/consents/**").hasRole("PATIENT")
                         .anyRequest().authenticated()
                 )
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
+                )
 
                 .formLogin(form -> form
                         .loginPage("/login")

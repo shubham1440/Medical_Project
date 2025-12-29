@@ -1,48 +1,597 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{layout}">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Health Vault | Gopal Hospital</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">-->
+
+<!--    <style>-->
+<!--        :root {-->
+<!--            &#45;&#45;gopal-navy: #1e293b;-->
+<!--            &#45;&#45;gopal-bg: #f8fafc;-->
+<!--            &#45;&#45;system-blue: #3b82f6;-->
+<!--            &#45;&#45;border-color: #e2e8f0;-->
+<!--            &#45;&#45;system-green: #10b981;-->
+<!--            &#45;&#45;system-red: #ef4444;-->
+<!--        }-->
+
+<!--        body {-->
+<!--            font-family: 'Plus Jakarta Sans', sans-serif;-->
+<!--            background-color: var(&#45;&#45;gopal-bg);-->
+<!--            color: var(&#45;&#45;gopal-navy);-->
+<!--        }-->
+
+<!--        .terminal-header { padding: 2.5rem 0; }-->
+
+<!--        .btn-back {-->
+<!--            display: inline-flex;-->
+<!--            align-items: center; justify-content: center;-->
+<!--            width: 42px; height: 42px;-->
+<!--            background: white; color: var(&#45;&#45;gopal-navy);-->
+<!--            border-radius: 10px; border: 1px solid var(&#45;&#45;border-color);-->
+<!--            transition: 0.2s; text-decoration: none;-->
+<!--        }-->
+<!--        .btn-back:hover { background: var(&#45;&#45;gopal-navy); color: white; }-->
+
+<!--        .bento-card {-->
+<!--            background: white;-->
+<!--            border: 1px solid var(&#45;&#45;border-color);-->
+<!--            border-radius: 20px;-->
+<!--            padding: 1.5rem;-->
+<!--            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);-->
+<!--        }-->
+
+<!--        .doc-row { transition: all 0.2s ease; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }-->
+<!--        .doc-row:hover { background-color: #f8fafc; }-->
+
+<!--        .file-icon {-->
+<!--            width: 40px; height: 40px;-->
+<!--            background: #eff6ff; color: var(&#45;&#45;system-blue);-->
+<!--            border-radius: 8px; display: flex; align-items: center; justify-content: center;-->
+<!--            font-size: 1.1rem;-->
+<!--        }-->
+
+<!--        /* Status Tag Logic */-->
+<!--        .status-tag {-->
+<!--            font-size: 0.65rem;-->
+<!--            font-weight: 800;-->
+<!--            padding: 0.35rem 0.7rem;-->
+<!--            border-radius: 6px;-->
+<!--            text-transform: uppercase;-->
+<!--            display: inline-flex;-->
+<!--            align-items: center;-->
+<!--            gap: 5px;-->
+<!--            letter-spacing: 0.02em;-->
+<!--        }-->
+
+<!--        .status-verified {-->
+<!--            background: #ecfdf5;-->
+<!--            color: #059669;-->
+<!--            border: 1px solid rgba(16, 185, 129, 0.2);-->
+<!--        }-->
+
+<!--        .status-failed {-->
+<!--            background: #fef2f2;-->
+<!--            color: #dc2626;-->
+<!--            border: 1px solid rgba(239, 68, 68, 0.2);-->
+<!--        }-->
+
+<!--        .btn-upload-trigger {-->
+<!--            background: var(&#45;&#45;gopal-navy); color: white;-->
+<!--            border-radius: 12px; font-weight: 700; padding: 0.6rem 1.5rem;-->
+<!--            border: none; transition: 0.3s ease;-->
+<!--        }-->
+<!--        .btn-upload-trigger:hover { background: #000; transform: translateY(-1px); color: white; }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div layout:fragment="content">-->
+
+<!--    <header class="terminal-header">-->
+<!--        <div class="container">-->
+<!--            <div class="d-flex justify-content-between align-items-center">-->
+<!--                <div class="d-flex align-items-center gap-3">-->
+<!--                    <a th:href="@{/patient/dashboard}" class="btn-back">-->
+<!--                        <i class="bi bi-chevron-left"></i>-->
+<!--                    </a>-->
+<!--                    <div>-->
+<!--                        <h2 class="fw-800 mb-0">Health Vault</h2>-->
+<!--                        <p class="text-secondary small mb-0"><i class="bi bi-shield-check me-1"></i> AES-256 Encrypted Storage</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <button class="btn btn-upload-trigger shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadModal">-->
+<!--                    <i class="bi bi-cloud-arrow-up-fill me-2"></i>Upload Record-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </header>-->
+
+<!--    <div class="container pb-5">-->
+<!--        <div class="bento-card">-->
+<!--            <div class="row mb-4 align-items-center">-->
+<!--                <div class="col-md-6">-->
+<!--                    <h5 class="fw-700 mb-0">Medical Records</h5>-->
+<!--                </div>-->
+<!--                <div class="col-md-6">-->
+<!--                    <div class="input-group">-->
+<!--                        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>-->
+<!--                        <input type="text" id="vaultSearch" class="form-control bg-light border-0" placeholder="Search by name or category...">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="table-responsive">-->
+<!--                <table class="table table-borderless align-middle" id="vaultTable">-->
+<!--                    <thead>-->
+<!--                    <tr class="text-secondary small text-uppercase fw-bold" style="border-bottom: 2px solid #f1f5f9;">-->
+<!--                        <th>File Name</th>-->
+<!--                        <th>Category</th>-->
+<!--                        <th>Date</th>-->
+<!--                        <th>Status</th>-->
+<!--                        <th class="text-end">Action</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:if="${#lists.isEmpty(documents)}">-->
+<!--                        <td colspan="5" class="text-center py-5">-->
+<!--                            <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" width="80" class="opacity-25 mb-3" alt="Empty">-->
+<!--                            <p class="text-muted fw-semibold">No medical documents uploaded yet.</p>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+
+<!--                    <tr th:each="doc : ${documents}" class="doc-row">-->
+<!--                        <td>-->
+<!--                            <div class="d-flex align-items-center gap-3">-->
+<!--                                <div class="file-icon">-->
+<!--                                    <i th:class="${doc.fileSize == '0 B' ? 'bi bi-file-earmark-x-fill text-danger' : 'bi bi-file-earmark-pdf-fill'}"></i>-->
+<!--                                </div>-->
+<!--                                <div>-->
+<!--                                    <div class="fw-bold text-dark text-truncate" style="max-width: 200px;" th:text="${doc.title}">Report.pdf</div>-->
+<!--                                    <div class="text-muted small" th:text="${doc.fileSize}">2.4 MB</div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                        <td>-->
+<!--                            <span class="badge bg-light text-primary border rounded-pill px-3" th:text="${doc.category}">General</span>-->
+<!--                        </td>-->
+<!--                        <td class="small fw-600 text-secondary" th:text="${doc.documentDate}">2025-05-12</td>-->
+<!--                        <td>-->
+<!--                            <span th:if="${doc.fileSize != '0 B'}" class="status-tag status-verified">-->
+<!--                                <i class="bi bi-patch-check-fill"></i> Verified-->
+<!--                            </span>-->
+<!--                            <span th:unless="${doc.fileSize != '0 B'}" class="status-tag status-failed">-->
+<!--                                <i class="bi bi-exclamation-triangle-fill"></i> Failed-->
+<!--                            </span>-->
+<!--                        </td>-->
+<!--                        <td class="text-end">-->
+<!--                            <div class="btn-group">-->
+<!--                                <a th:if="${doc.fileSize != '0 B'}" th:href="@{/documents/download/{id}(id=${doc.id})}" class="btn btn-sm btn-light rounded-circle me-2" title="Download">-->
+<!--                                    <i class="bi bi-download text-dark"></i>-->
+<!--                                </a>-->
+<!--                                <button class="btn btn-sm btn-light rounded-circle view-details-btn"-->
+<!--                                        th:data-id="${doc.id}"-->
+<!--                                        th:data-title="${doc.title}"-->
+<!--                                        th:data-category="${doc.category}"-->
+<!--                                        th:data-size="${doc.fileSize}">-->
+<!--                                    <i class="bi bi-eye-fill text-primary"></i>-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">-->
+<!--        <div class="modal-dialog modal-dialog-centered">-->
+<!--            <div class="modal-content border-0 shadow" style="border-radius: 20px;">-->
+<!--                <form th:action="@{/documents/upload}" method="post" enctype="multipart/form-data">-->
+<!--                    <div class="modal-header border-0">-->
+<!--                        <h5 class="fw-800 mb-0">Secure Upload</h5>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body py-4">-->
+<!--                        <div class="mb-4">-->
+<!--                            <label class="form-label small fw-bold text-secondary">SELECT FILE</label>-->
+<!--                            <input type="file" name="file" id="fileInput" class="form-control form-control-lg border-2" required accept=".pdf,.png,.jpg">-->
+<!--                            <div class="form-text mt-2" id="fileHelp">Max: 10MB (PDF, PNG, JPG)</div>-->
+<!--                        </div>-->
+<!--                        <div class="mb-3">-->
+<!--                            <label class="form-label small fw-bold text-secondary">DOCUMENT CATEGORY</label>-->
+<!--                            <select name="category" class="form-select form-select-lg border-2">-->
+<!--                                <option value="Radiology">Radiology / Imaging</option>-->
+<!--                                <option value="Lab Report">Pathology / Lab Report</option>-->
+<!--                                <option value="Prescription">Doctor Prescription</option>-->
+<!--                                <option value="Discharge Summary">Discharge Summary</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="modal-footer border-0 pt-0">-->
+<!--                        <button type="submit" class="btn btn-dark w-100 py-3 fw-bold" style="border-radius: 12px;">-->
+<!--                            Start Encryption & Upload-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="offcanvas offcanvas-end border-0 shadow" tabindex="-1" id="documentDrawer" style="width: 400px;">-->
+<!--        <div class="offcanvas-header bg-light">-->
+<!--            <h6 class="offcanvas-title fw-800">Record Overview</h6>-->
+<!--            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>-->
+<!--        </div>-->
+<!--        <div class="offcanvas-body">-->
+<!--            <div class="text-center py-4 mb-4">-->
+<!--                <div id="drawerIconBox" class="mb-3 mx-auto shadow-sm" style="width: 70px; height: 70px; background: #f0f7ff; border-radius: 20px; display: flex; align-items: center; justify-content: center;">-->
+<!--                    <i class="bi bi-file-earmark-medical text-primary fs-2"></i>-->
+<!--                </div>-->
+<!--                <h5 id="drawerTitle" class="fw-bold mb-1 text-break">-&#45;&#45;</h5>-->
+<!--                <p id="drawerCategory" class="text-primary small fw-bold text-uppercase mb-0">-&#45;&#45;</p>-->
+<!--            </div>-->
+
+<!--            <div class="card border-0 bg-light rounded-4 p-3 mb-4">-->
+<!--                <div class="d-flex justify-content-between mb-2">-->
+<!--                    <span class="text-secondary small">File Size</span>-->
+<!--                    <span id="drawerSize" class="fw-bold small text-dark">-&#45;&#45;</span>-->
+<!--                </div>-->
+<!--                <div class="d-flex justify-content-between">-->
+<!--                    <span class="text-secondary small">Status</span>-->
+<!--                    <span id="drawerStatusBadge">-&#45;&#45;</span>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="d-grid gap-2" id="drawerActionButtons">-->
+<!--                <a id="drawerPreview" href="#" target="_blank" class="btn btn-primary py-3 fw-bold rounded-3">-->
+<!--                    <i class="bi bi-window me-2"></i>Open in Browser-->
+<!--                </a>-->
+<!--                <a id="drawerDownload" href="#" class="btn btn-outline-dark py-3 fw-bold rounded-3">-->
+<!--                    <i class="bi bi-download me-2"></i>Save to Device-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <script th:inline="javascript">-->
+<!--        document.addEventListener('DOMContentLoaded', function() {-->
+<!--            const drawerElement = document.getElementById('documentDrawer');-->
+<!--            const bsOffcanvas = new bootstrap.Offcanvas(drawerElement);-->
+
+<!--            document.querySelectorAll('.view-details-btn').forEach(btn => {-->
+<!--                btn.addEventListener('click', function() {-->
+<!--                    const id = this.dataset.id;-->
+<!--                    const title = this.dataset.title;-->
+<!--                    const cat = this.dataset.category;-->
+<!--                    const size = this.dataset.size;-->
+
+<!--                    document.getElementById('drawerTitle').innerText = title;-->
+<!--                    document.getElementById('drawerCategory').innerText = cat;-->
+<!--                    document.getElementById('drawerSize').innerText = size;-->
+
+<!--                    const statusBadge = document.getElementById('drawerStatusBadge');-->
+<!--                    const actionButtons = document.getElementById('drawerActionButtons');-->
+<!--                    const iconBox = document.getElementById('drawerIconBox');-->
+
+<!--                    if(size === '0 B') {-->
+<!--                        statusBadge.innerHTML = '<span class="text-danger fw-bold small"><i class="bi bi-x-circle-fill me-1"></i>Failed</span>';-->
+<!--                        actionButtons.classList.add('d-none');-->
+<!--                        iconBox.innerHTML = '<i class="bi bi-file-earmark-x text-danger fs-2"></i>';-->
+<!--                        iconBox.style.background = '#fef2f2';-->
+<!--                    } else {-->
+<!--                        statusBadge.innerHTML = '<span class="text-success fw-bold small"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>';-->
+<!--                        actionButtons.classList.remove('d-none');-->
+<!--                        iconBox.innerHTML = '<i class="bi bi-file-earmark-medical text-primary fs-2"></i>';-->
+<!--                        iconBox.style.background = '#f0f7ff';-->
+
+<!--                        document.getElementById('drawerPreview').href = '/documents/' + id;-->
+<!--                        document.getElementById('drawerDownload').href = '/documents/download/' + id;-->
+<!--                    }-->
+
+<!--                    bsOffcanvas.show();-->
+<!--                });-->
+<!--            });-->
+
+<!--            // Live Search Script-->
+<!--            const searchInput = document.getElementById('vaultSearch');-->
+<!--            searchInput.addEventListener('input', function() {-->
+<!--                const term = this.value.toLowerCase();-->
+<!--                const rows = document.querySelectorAll('#vaultTable tbody tr.doc-row');-->
+<!--                rows.forEach(row => {-->
+<!--                    row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>Documents</title>
+    <meta charset="UTF-8">
+    <title>Health Vault | Gopal Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gopal-navy: #0f172a;
+            --gopal-blue: #3b82f6;
+            --gopal-bg: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--gopal-bg);
+            color: var(--gopal-navy);
+        }
+
+        /* Navigation Header */
+        .vault-header { padding: 2.5rem 0; }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            width: 45px; height: 45px;
+            background: white; color: var(--gopal-navy);
+            border-radius: 12px; border: 1px solid var(--border-color);
+            transition: 0.2s; text-decoration: none;
+        }
+        .btn-back:hover { background: var(--gopal-navy); color: white; transform: translateX(-3px); }
+
+        .page-title { font-weight: 800; letter-spacing: -0.03em; font-size: 2rem; margin-bottom: 0; }
+
+        /* Content Card */
+        .bento-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Status & Icons */
+        .status-tag {
+            font-size: 0.65rem; font-weight: 800; padding: 0.4rem 0.8rem;
+            border-radius: 50px; text-transform: uppercase;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .status-verified { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status-failed { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .file-icon-box {
+            width: 45px; height: 45px;
+            background: #f1f5f9; color: var(--gopal-blue);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        /* Pop-up Panel Viewer */
+        #previewModal .modal-dialog { max-width: 92vw; height: 90vh; margin: 2vh auto; }
+        #previewModal .modal-content { height: 100%; border-radius: 20px; border: none; overflow: hidden; }
+        .pdf-viewer-container { width: 100%; height: 100%; background: #334155; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .btn-upload-trigger {
+            background: var(--gopal-navy); color: white; border-radius: 12px;
+            padding: 0.7rem 1.5rem; font-weight: 700; border: none; transition: 0.3s;
+        }
+        .btn-upload-trigger:hover { background: #000; transform: translateY(-2px); color: white; }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="card">
-        <div class="card-header">
-            <h5>Clinical Documents</h5>
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Date</th>
-                    <th>Author</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="doc : ${documents}">
-                    <td th:text="${doc.title}"></td>
-                    <td th:text="${doc.documentType}"></td>
-                    <td th:text="${#temporals.format(doc.documentDate, 'MMM dd, yyyy')}"></td>
-                    <td th:text="${doc.authorName}"></td>
-                    <td>
-                        <button class="btn btn-sm btn-info"
-                                th:onclick="'viewDocument(' + ${doc.id} + ')'">
-                            <i class="bi bi-eye"></i> View
-                        </button>
-                        <button class="btn btn-sm btn-secondary"
-                                th:onclick="'viewHistory(' + ${doc.id} + ')'">
-                            <i class="bi bi-clock-history"></i> History
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    <div class="container vault-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <a th:href="@{/patient/dashboard}" class="btn-back shadow-sm" title="Back to Dashboard">
+                    <i class="bi bi-arrow-left fs-5"></i>
+                </a>
+                <div>
+                    <p class="text-primary fw-bold mb-0 small text-uppercase" style="font-size: 0.7rem;">Secure Storage</p>
+                    <h1 class="page-title">Health Vault</h1>
+                </div>
+            </div>
+            <button class="btn btn-upload-trigger shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Upload Record
+            </button>
         </div>
     </div>
+
+    <div class="container pb-5">
+        <div class="bento-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="vaultTable">
+                    <thead>
+                    <tr class="text-secondary small text-uppercase">
+                        <th style="width: 45%">Document Name</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(documents)}">
+                        <td colspan="4" class="text-center py-5 text-muted">No records found in your vault.</td>
+                    </tr>
+                    <tr th:each="doc : ${documents}" class="doc-row">
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="file-icon-box">
+                                    <i th:class="${doc.fileSize == '0 B' ? 'bi bi-file-earmark-x text-danger' : 'bi bi-file-earmark-pdf-fill'}"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark" th:text="${doc.title}">Report.pdf</div>
+                                    <small class="text-muted" th:text="${doc.fileSize}">2.4 MB</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge bg-light text-primary py-2 px-3 rounded-pill" th:text="${doc.category}">General</span></td>
+                        <td>
+                                <span th:if="${doc.fileSize != '0 B'}" class="status-tag status-verified">
+                                    <i class="bi bi-patch-check-fill"></i> Verified
+                                </span>
+                            <span th:unless="${doc.fileSize != '0 B'}" class="status-tag status-failed">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Error
+                                </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-outline-primary btn-sm rounded-pill px-4 view-details-btn"
+                                    th:data-id="${doc.id}"
+                                    th:data-title="${doc.title}"
+                                    th:data-size="${doc.fileSize}">
+                                Examine
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+                <form th:action="@{/documents/upload}" method="post" enctype="multipart/form-data" id="uploadForm">
+                    <div class="modal-header border-0 pt-4 px-4">
+                        <h5 class="fw-bold mb-0">Secure Record Upload</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-secondary">SELECT FILE</label>
+                            <input type="file" name="file" id="fileInput" class="form-control" required style="border-radius: 12px; padding: 12px;">
+
+                            <div class="form-text mt-2 text-primary fw-600" id="fileHelp">
+                                <i class="bi bi-info-circle me-1"></i> Maximum 20MB data allowed per upload.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">CATEGORY</label>
+                            <select name="category" class="form-select" style="border-radius: 12px; padding: 12px;">
+                                <option value="Radiology">Radiology / Imaging</option>
+                                <option value="Lab Report">Pathology / Blood Test</option>
+                                <option value="Prescription">Doctor Prescription</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="submit" class="btn btn-upload-trigger w-100 py-3" id="uploadBtn">Upload Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="previewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title fw-bold" id="previewTitle">Examine Record</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="pdf-viewer-container">
+                        <iframe id="pdfFrame" src=""></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="documentDrawer" style="width: 400px; border-radius: 24px 0 0 24px;">
+        <div class="offcanvas-header pt-4 px-4">
+            <h5 class="fw-bold mb-0">Record Overview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-4 text-center">
+            <div class="py-5 mb-4 bg-light rounded-4">
+                <i class="bi bi-file-lock2-fill display-4 text-primary"></i>
+                <h4 id="drawerTitle" class="fw-bold mt-3 px-3">---</h4>
+                <p id="drawerSize" class="text-muted small">---</p>
+            </div>
+            <div class="d-grid gap-3" id="actionArea">
+                <button id="popPanelBtn" class="btn btn-upload-trigger py-3">
+                    <i class="bi bi-window-fullscreen me-2"></i>Examine Document
+                </button>
+                <a id="downloadLink" href="#" class="btn btn-outline-dark py-3 fw-bold">
+                    <i class="bi bi-download me-2"></i>Download Original
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const drawer = new bootstrap.Offcanvas(document.getElementById('documentDrawer'));
+            const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+            const pdfFrame = document.getElementById('pdfFrame');
+            let activeId = null;
+
+            document.querySelectorAll('.view-details-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    activeId = this.dataset.id;
+                    document.getElementById('drawerTitle').innerText = this.dataset.title;
+                    document.getElementById('drawerSize').innerText = this.dataset.size;
+
+                    if(this.dataset.size === '0 B') {
+                        document.getElementById('actionArea').classList.add('d-none');
+                    } else {
+                        document.getElementById('actionArea').classList.remove('d-none');
+                        document.getElementById('downloadLink').href = "/documents/download/" + activeId;
+                    }
+                    drawer.show();
+                });
+            });
+
+            document.getElementById('popPanelBtn').addEventListener('click', function() {
+                pdfFrame.src = "/documents/" + activeId;
+                document.getElementById('previewTitle').innerText = document.getElementById('drawerTitle').innerText;
+                drawer.hide();
+                previewModal.show();
+            });
+
+            document.getElementById('previewModal').addEventListener('hidden.bs.modal', () => {
+                pdfFrame.src = '';
+            });
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const file = this.files[0];
+            const maxSize = 20 * 1024 * 1024; // 20MB in bytes
+            const helpText = document.getElementById('fileHelp');
+            const uploadBtn = document.getElementById('uploadBtn');
+
+            if (file && file.size > maxSize) {
+                // Show error styling
+                helpText.classList.replace('text-primary', 'text-danger');
+                helpText.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> File too large! Please select a file smaller than 20MB.';
+
+                // Reset the input so they can't upload it
+                this.value = "";
+                uploadBtn.disabled = true;
+            } else {
+                // Reset to normal if file is okay
+                helpText.classList.replace('text-danger', 'text-primary');
+                helpText.innerHTML = '<i class="bi bi-info-circle me-1"></i> Maximum 20MB data allowed per upload.';
+                uploadBtn.disabled = false;
+            }
+        });
+    </script>
 </div>
 </body>
 </html>
