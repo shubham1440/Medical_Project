@@ -77,7 +77,7 @@ The system exposes a robust REST API for integration with lab systems and pharma
 | Layer | Technology |
 | :--- | :--- |
 | **Frontend** | HTML5, CSS3, JavaScript, Bootstrap |
-| **Backend** | PHP (Core) |
+| **Backend** | Java 21 (Core), Spring Boot , Spring Secuirty, Spring Data JPA |
 | **Database** | MySQL |
 | **Server** | Apache (XAMPP / WAMP) |
 
