@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConsentDTO {
     private Long id;
+    private String patientName;
     private String providerName;
     private String providerEmail;
     private String grantedRole;          // Example: "PROVIDER"

@@ -1,5 +1,6 @@
 package com.healthcare.repo;
 
+import com.healthcare.models.Patient;
 import com.healthcare.models.Provider;
 import com.healthcare.models.User;
 import com.healthcare.models.enums.Role;
@@ -25,6 +26,7 @@ public interface ProviderRepository extends JpaRepository<Provider, Long> {
 
     List<Provider> findBySpecialty(String specialty);
 
+
     List<Provider> findByDepartment(String department);
 
     List<Provider> findByFacility(String facility);
@@ -43,5 +45,7 @@ public interface ProviderRepository extends JpaRepository<Provider, Long> {
 
     @Query("SELECT p FROM Provider p JOIN p.user u WHERE p.deleted = false AND u.accountEnabled = true")
     List<Provider> findActiveProvidersForRoster();
+
+    Optional<Provider> findByUserId(Long userId);
 }
 

@@ -1,5 +1,6 @@
 package com.healthcare.repo;
 
+import com.healthcare.dto.PatientSearchResult;
 import com.healthcare.models.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +30,20 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     Patient findByEmail(String email);
 
-//    List<Patient> findPatientAssociateByProviderId();
+    @Query("SELECT new com.healthcare.dto.PatientSearchResult(p.id, p.firstName, p.lastName, p.mrn, p.dateOfBirth, p.gender) " +
+            "FROM Patient p WHERE p.id = :id")
+    List<PatientSearchResult> findByIdCustom(@Param("id") Long id);
+
+    // Optimized with a GIN or B-Tree index on fullName
+    @Query("SELECT new com.healthcare.dto.PatientSearchResult(p.id, p.firstName, p.lastName, p.mrn, p.dateOfBirth, p.gender) " +
+            "FROM Patient p " +
+            "WHERE LOWER(p.firstName) LIKE LOWER(CONCAT('%', :name, '%')) " +
+            "OR LOWER(p.lastName) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<PatientSearchResult> findByNameContainingIgnoreCase(@Param("name") String name);
+
+
+    @Query("SELECT p FROM Patient p WHERE " +
+            "LOWER(p.firstName) LIKE LOWER(CONCAT('%', :q, '%')) OR " +
+            "LOWER(p.lastName) LIKE LOWER(CONCAT('%', :q, '%'))")
+    List<Patient> searchByNames(@Param("q") String q);
 }

@@ -5,10 +5,7 @@ import com.healthcare.models.ClinicalDocument;
 import com.healthcare.models.Document;
 import com.healthcare.models.Patient;
 import com.healthcare.models.User;
-import com.healthcare.repo.ClinicalDocumentRepository;
-import com.healthcare.repo.DocumentRepository;
-import com.healthcare.repo.PatientRepository;
-import com.healthcare.repo.UserRepository;
+import com.healthcare.repo.*;
 import com.healthcare.service.AuditService;
 import com.healthcare.service.DocumentService;
 import com.healthcare.util.PHIMaskingUtil;
@@ -38,6 +35,7 @@ public class DocumentServiceImpl implements DocumentService {
     private final UserRepository userRepository;
     private final AuditService auditService;
     private final PHIMaskingUtil phiMaskingUtil;
+    private final ConsentRepository consentRepository;
 
     @Override
     public List<DocumentDTO> getDocumentsForPatient(String email) {
@@ -53,6 +51,19 @@ public class DocumentServiceImpl implements DocumentService {
     public int countDocumentsForPatient(String email) {
         Patient patient = patientRepository.findByEmail(email);
         return clinicalDocumentRepository.countByPatientAndIsCurrentTrue(patient);
+    }
+
+    @Override
+    public DocumentDTO getByConsentId(Long Id){
+        Document doc = documentRepository.findById(consentRepository.getReferenceById(Id).getDocument().getId())
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
+        return DocumentDTO.builder()
+                .id(doc.getId())
+                .title(doc.getFileName())
+                .documentType(doc.getContentType())
+                .data(doc.getData())
+                .build();
     }
 
     @Override

@@ -269,30 +269,30 @@ CREATE TABLE IF NOT EXISTS clinical_documents (
         REFERENCES clinical_documents(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS consents (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    patient_id BIGINT NOT NULL,
-    provider_id BIGINT,
-    granted_role VARCHAR(20),
-    permission_type VARCHAR(20) NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    granted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    revoked_at TIMESTAMP NULL,
-    notes VARCHAR(1000),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    created_by VARCHAR(100),
-    updated_by VARCHAR(100),
-    deleted BOOLEAN DEFAULT FALSE,
-    version BIGINT DEFAULT 0,
-    INDEX idx_consent_patient (patient_id),
-    INDEX idx_consent_provider (provider_id),
-    INDEX idx_consent_active (is_active),
-    CONSTRAINT fk_consents_patient FOREIGN KEY (patient_id)
-        REFERENCES patients(id) ON DELETE CASCADE,
-    CONSTRAINT fk_consents_provider FOREIGN KEY (provider_id)
-        REFERENCES providers(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--CREATE TABLE IF NOT EXISTS consents (
+--    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--    patient_id BIGINT NOT NULL,
+--    provider_id BIGINT,
+--    granted_role VARCHAR(20),
+--    permission_type VARCHAR(20) NOT NULL,
+--    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+--    granted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--    revoked_at TIMESTAMP NULL,
+--    notes VARCHAR(1000),
+--    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--    updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+--    created_by VARCHAR(100),
+--    updated_by VARCHAR(100),
+--    deleted BOOLEAN DEFAULT FALSE,
+--    version BIGINT DEFAULT 0,
+--    INDEX idx_consent_patient (patient_id),
+--    INDEX idx_consent_provider (provider_id),
+--    INDEX idx_consent_active (is_active),
+--    CONSTRAINT fk_consents_patient FOREIGN KEY (patient_id)
+--        REFERENCES patients(id) ON DELETE CASCADE,
+--    CONSTRAINT fk_consents_provider FOREIGN KEY (provider_id)
+--        REFERENCES providers(id) ON DELETE CASCADE
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS audit_events (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -11,5 +11,6 @@ public interface DocumentService {
     List<DocumentDTO> getDocumentsForPatient(String email);
     int countDocumentsForPatient(String email);
     DocumentDTO getFileById(Long id);
+    public DocumentDTO getByConsentId(Long Id);
     void saveDocument(MultipartFile file, String category, String email) throws IOException;
 }

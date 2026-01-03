@@ -7,17 +7,20 @@ import com.healthcare.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@PreAuthorize("hasRole('PATIENT')")
+
 public class PatientDashboardController {
 
     private final AppointmentService appointmentService;
@@ -25,8 +28,10 @@ public class PatientDashboardController {
     private final LabResultService labResultService;
     private final DocumentService documentService;
     private final ConsentService consentService;
+    private final PatientService patientService;
 
     @GetMapping("/patient/dashboard")
+    @PreAuthorize("hasRole('PATIENT')")
     public String dashboard(Model model, Authentication auth) {
         String email = auth.getName();
 
@@ -47,6 +52,12 @@ public class PatientDashboardController {
         model.addAttribute("providers", providerPage.getContent());
 
         return "dashboard/patient/dashboard";
+    }
+
+    @GetMapping("/patients/search")
+    @PreAuthorize("hasRole('PROVIDER')")
+    public ResponseEntity<List<PatientSearchResult>> search(@RequestParam String query) {
+        return ResponseEntity.ok(patientService.findPatients(query));
     }
 }
 

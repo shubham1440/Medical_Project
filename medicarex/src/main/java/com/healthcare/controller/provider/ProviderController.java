@@ -2,10 +2,15 @@ package com.healthcare.controller.provider;
 
 
 import com.healthcare.dto.AppointmentDTO;
+import com.healthcare.dto.ConsentDTO;
+import com.healthcare.dto.request.CreateConsentRequestDTO;
 import com.healthcare.models.Appointment;
+import com.healthcare.models.enums.*;
 import com.healthcare.service.AppointmentService;
+import com.healthcare.service.ConsentService;
 import com.healthcare.service.ProviderService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -15,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 @PreAuthorize("hasRole('PROVIDER')")
@@ -25,6 +30,7 @@ public class ProviderController {
 
     private final AppointmentService appointmentService;
     private final ProviderService providerService;
+    private final ConsentService consentService;
 
     @GetMapping("/provider/dashboard")
     public String dashboard(Model model, Authentication auth) {
@@ -39,6 +45,39 @@ public class ProviderController {
         model.addAttribute("assignedPatients",
                 providerService.countAssignedPatients(email));
         model.addAttribute("appointments", appointments != null ? appointments : Collections.emptyList());
+
+        Map<String, List<Map<String, String>>> categoryMap = new HashMap<>();
+
+        for (ResourceCategory cat : ResourceCategory.values()) {
+            List<Map<String, String>> subTypes = new ArrayList<>();
+
+            ResourceSubType[] types = switch (cat) {
+                case DIAGNOSTICS -> DiagnosticType.values();
+                case IMAGING -> ImagingType.values();
+                case PRESCRIPTIONS -> PrescriptionType.values();
+            };
+
+            for (ResourceSubType type : types) {
+                subTypes.add(Map.of(
+                        "id", ((Enum<?>) type).name(),
+                        "label", type.getDisplayName()
+                ));
+            }
+            categoryMap.put(cat.name(), subTypes);
+        }
+
+        log.warn("DEBUG: Consent Category Map: " + categoryMap);
+
+        model.addAttribute("categoryMap", categoryMap);
+        model.addAttribute("categories", ResourceCategory.values());
+
+        List<ConsentDTO> ActiveConsentlist = consentService.getAllApprovedConsents(email);
+        log.info("ActiveConsentlist: " + ActiveConsentlist.size());
+        List<CreateConsentRequestDTO> PendingConsentlist =  consentService.getPendingRequestsForPatient(email);
+        log.info("PendingConsentlist: " + PendingConsentlist.size());
+        model.addAttribute("activeConsent",ActiveConsentlist);
+        model.addAttribute("pendingConsent",PendingConsentlist);
+
         return "dashboard/provider/dashboard";
     }
 

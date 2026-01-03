@@ -2,6 +2,7 @@ package com.healthcare.service.Impl;
 
 import com.healthcare.dto.PatientDTO;
 import com.healthcare.dto.PatientRegistryDTO;
+import com.healthcare.dto.PatientSearchResult;
 import com.healthcare.dto.request.CreatePatientRequest;
 import com.healthcare.dto.response.PageResponse;
 import com.healthcare.models.Patient;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageImpl;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -224,6 +226,40 @@ public class PatientServiceImpl implements PatientService {
         );
 
         return convertToDTO(patient, false);
+    }
+
+    public List<PatientSearchResult> findPatients(String query) {
+        if (query == null || query.isBlank()) return List.of();
+
+        List<Patient> patients;
+
+        // 1. Identify search type
+        if (query.matches("^\\d+$")) {
+            // Priority 1: Primary Key (High Availability/Fastest)
+            patients = patientRepository.findById(Long.parseLong(query))
+                    .map(List::of)
+                    .orElse(Collections.emptyList());
+        } else {
+            // Priority 2: Name Search (firstName OR lastName)
+            // Name is plain-text in your entity, so LIKE works perfectly.
+            patients = patientRepository.searchByNames(query.toLowerCase());
+        }
+
+        // 2. Map and Convert
+        return patients.stream()
+                .map(this::mapToSearchResult)
+                .collect(Collectors.toList());
+    }
+
+    private PatientSearchResult mapToSearchResult(Patient p) {
+        return new PatientSearchResult(
+                p.getId(),
+                p.getFirstName(),
+                p.getLastName(),
+                p.getMrn(), // PHIEncryptor handles decryption automatically during getter call
+                p.getDateOfBirth(),
+                p.getGender()
+        );
     }
 
     private PatientDTO convertToDTO(Patient patient, boolean maskPHI) {

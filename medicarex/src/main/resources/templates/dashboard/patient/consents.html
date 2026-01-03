@@ -3,193 +3,135 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
     <title>Privacy Terminal | Gopal Hospital</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --gopal-navy: #1e293b;
-            --gopal-bg: #f8fafc;
-            --system-green: #10b981;
-            --border-color: #e2e8f0;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--gopal-bg);
-            color: var(--gopal-navy);
-            letter-spacing: -0.02em;
-        }
-
-        .terminal-header { padding: 4rem 0 3rem; }
-
-        /* --- Modern Back Button --- */
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            background: white;
-            color: var(--gopal-navy);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
-            margin-right: 1.5rem;
-            text-decoration: none;
-        }
-
-        .btn-back:hover {
-            background: var(--gopal-navy);
-            color: white;
-            transform: translateX(-4px);
-        }
-
-        /* Bento Card Styling */
-        .bento-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Tech Form Controls */
-        .field-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .form-select-tech {
-            background-color: var(--gopal-bg) !important;
-            border: 1.5px solid var(--border-color) !important;
-            border-radius: 12px !important;
-            padding: 0.8rem 1rem !important;
-            font-weight: 600;
-        }
-
-        /* Custom Tech Switch */
-        .form-switch .form-check-input {
-            width: 3em;
-            height: 1.6em;
-            background-color: #cbd5e1;
-            border: none;
-            cursor: pointer;
-        }
-
-        .form-switch .form-check-input:checked {
-            background-color: var(--system-green);
-        }
-
-        .tech-table thead th {
-            background-color: var(--gopal-bg);
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            color: #64748b;
-            padding: 1rem;
-            border: none;
-        }
-
-        .btn-gopal-dark {
-            background-color: var(--gopal-navy);
-            color: white;
-            border-radius: 12px;
-            padding: 0.8rem 1.5rem;
-            font-weight: 700;
-            border: none;
-            transition: 0.2s;
-        }
-
-        .btn-gopal-dark:hover { background-color: #000; color: white; }
-    </style>
+    <th:block layout:fragment="page-css">
+        <link rel="stylesheet" th:href="@{/css/CDV1.css}">
+    </th:block>
 </head>
 <body>
 <div layout:fragment="content">
-    <header class="terminal-header">
-        <div class="container">
-            <div class="d-flex align-items-center">
-                <a th:href="@{/patient/dashboard}" class="btn-back shadow-sm" title="Back to Dashboard">
-                    <i class="bi bi-arrow-left fs-5"></i>
-                </a>
-                <div>
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <span style="width: 8px; height: 8px; background: var(--system-green); border-radius: 50%; display: inline-block;"></span>
-                        <span class="fw-bold small text-uppercase text-secondary" style="letter-spacing: 0.1em;">Privacy Registry</span>
-                    </div>
-                    <h1 class="fw-800 display-6 mb-0">Consent Management</h1>
-                </div>
-            </div>
-        </div>
-    </header>
+    <div class="container py-4">
 
-    <div class="container pb-5">
+        <div class="mb-5 d-flex align-items-center">
+            <a th:href="@{/patient/dashboard}" class="btn-back shadow-sm me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h3 class="terminal-header fw-800 mb-0">Privacy & Consent Terminal</h3>
+        </div>
+
         <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="bento-card">
-                    <h4 class="fw-800 mb-4">Authorize Provider</h4>
+            <div class="col-lg-3">
+                <div class="bento-card shadow-sm border-0">
+                    <h6 class="fw-800 mb-4 text-dark"><i class="bi bi-shield-plus me-2 text-primary"></i>Grant Access</h6>
                     <form method="post" th:action="@{/consent/grant}">
                         <div class="mb-4">
-                            <label for="providerId" class="field-label">Specialist Directory</label>
-                            <select class="form-select form-select-tech" id="providerId" name="providerId" required>
-                                <option value="" disabled selected>Select Provider...</option>
-                                <option th:each="provider : ${providers}"
-                                        th:value="${provider.id}"
-                                        th:text="${provider.firstName + ' ' + provider.lastName + ' - ' + provider.specialty}">
-                                </option>
+                            <label class="field-label">Select Physician</label>
+                            <select class="form-select border-1 bg-light rounded-3 fw-600" name="providerId" required>
+                                <option value="" disabled selected>Search Directory...</option>
+                                <option th:each="p : ${providers}" th:value="${p.id}" th:text="${p.firstName + ' ' + p.lastName}"></option>
                             </select>
                         </div>
-                        <button type="submit" class="btn-gopal-dark w-100" th:disabled="${#lists.isEmpty(providers)}">
-                            Initialize Access
-                        </button>
+                        <button type="submit" class="btn btn-dark w-100 rounded-3 fw-700 py-2 shadow-sm">Initialize Access</button>
                     </form>
                 </div>
             </div>
 
-            <div class="col-lg-8">
-                <div class="bento-card">
-                    <div class="d-md-flex justify-content-between align-items-center mb-4">
-                        <h4 class="fw-800 mb-0">Live Access Permissions</h4>
-                        <div class="mt-3 mt-md-0">
-                            <input id="providerSearch" type="text" class="form-control"
-                                   placeholder="Search keys..." style="border-radius: 12px; background: #f8fafc;">
+            <div class="col-lg-9">
+
+                <div th:if="${PendingConsents != null and !#lists.isEmpty(PendingConsents)}">
+                    <h5 class="fw-800 mb-4"><i class="bi bi-lightning-fill text-warning"></i> Pending Clinical Requests</h5>
+
+                    <div th:each="request : ${PendingConsents}" th:id="'card-' + ${request.requestId}" class="bento-card request-alert-card mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="field-label">Requesting Provider</div>
+                                <h5 class="fw-800 mb-0" th:text="${request.provider_name}">Doctor Name</h5>
+                                <div class="text-muted small fw-600">ID: #<span th:text="${request.provider_id}">8</span></div>
+                                <div class="mt-4">
+                                    <div class="field-label">Clinical Reason</div>
+                                    <p class="small fw-600 bg-white border p-3 rounded-3" th:text="${request.reason}">Reason text</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="field-label">Request Date</div>
+                                <div class="small fw-700 mb-3" th:text="${request.createdAt != null ? #temporals.format(request.createdAt, 'dd MMM yyyy, HH:mm') : 'Recently'}">Date</div>
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <button class="btn-reject" th:data-id="${request.requestId}" onclick="processRejection(this.getAttribute('data-id'))">Reject</button>
+                                    <button class="btn-approve" th:data-id="${request.requestId}" onclick="processApproval(this.getAttribute('data-id'))">Approve</button>
+                                </div>
+                            </div>
                         </div>
+
+                        <hr class="my-4" style="opacity: 0.05;">
+
+                        <div class="row align-items-end">
+                            <div class="col-md-6">
+                                <label class="field-label">Option A: Select from Vault</label>
+                                <select th:id="'doc-select-' + ${request.requestId}" class="vault-select-custom mb-3">
+                                    <option selected disabled value="">Choose available document...</option>
+                                    <option th:each="doc : ${document}" th:value="${doc.id}" th:text="${doc.title}"></option>
+                                </select>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="field-label mb-0">Set Expiry:</span>
+                                    <select th:id="'expiry-select-' + ${request.requestId}" class="form-select form-select-sm w-auto fw-700">
+                                        <option value="1">1 Hour</option>
+                                        <option value="24" selected>24 Hours</option>
+                                        <option value="168">1 Week</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <label class="field-label d-block">Option B: Upload New</label>
+                                <div class="d-flex justify-content-end align-items-center gap-3">
+                                    <div class="upload-icon-btn" th:data-id="${request.requestId}" onclick="triggerUpload(this.getAttribute('data-id'))">
+                                        <i class="bi bi-cloud-arrow-up text-success fs-5"></i>
+                                    </div>
+                                    <input type="file" th:id="'file-input-' + ${request.requestId}" class="d-none"
+                                           th:data-id="${request.requestId}" onchange="handleDirectUpload(this.getAttribute('data-id'))">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-card border-0 shadow-sm mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h6 class="fw-800 mb-0">Active Authorizations</h6>
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3"
+                              th:text="${#lists.size(autorizedConsents) + ' Active'}">0 Active</span>
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table tech-table" id="consentTable">
+                        <table class="table table-hover align-middle mb-0">
                             <thead>
-                            <tr>
-                                <th>Entity Identifier</th>
-                                <th>Access Status</th>
+                            <tr class="field-label text-muted border-0">
+                                <th class="ps-0">Physician</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-end pe-0">Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="consent : ${consents}">
-                                <td>
-                                    <div class="fw-bold" th:text="${consent.provider.firstName + ' ' + consent.provider.lastName}">Provider Name</div>
-                                    <div class="text-secondary small" th:text="${consent.provider.specialty}">Specialty</div>
+                            <tr th:each="consent : ${autorizedConsents}">
+                                <td class="ps-0">
+                                    <div class="fw-800 text-dark" th:text="${consent.providerName}">Provider Name</div>
                                 </td>
-                                <td>
-                                    <div class="form-check form-switch d-flex align-items-center gap-3">
-                                        <input class="form-check-input"
-                                               type="checkbox"
-                                               th:id="'consentSwitch-' + ${consent.provider.id}"
-                                               th:checked="${consent.consentGranted}"
-                                               th:onchange="'toggleConsent(' + ${consent.provider.id} + ', this)'">
-                                        <label class="fw-bold small text-uppercase"
-                                               th:id="'label-' + ${consent.provider.id}"
-                                               th:style="${consent.consentGranted ? 'color: var(--system-green)' : 'color: #94a3b8'}"
-                                               th:text="${consent.consentGranted ? 'Granted' : 'Revoked'}">
-                                        </label>
+                                <td class="text-center">
+                                        <span class="badge rounded-pill fw-bold bg-success-subtle text-success border border-success-subtle px-3 py-2">
+                                            ACTIVE
+                                        </span>
+                                </td>
+                                <td class="text-end pe-0">
+                                    <div class="form-check form-switch d-inline-block">
+                                        <input class="form-check-input custom-switch" type="checkbox" checked
+                                               th:data-id="${consent.id}"
+                                               onchange="processRejection(this.getAttribute('data-id'))">
                                     </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(autorizedConsents)}">
+                                <td colspan="3" class="text-center py-5 text-muted fw-600">
+                                    <i class="bi bi-shield-slash d-block fs-2 mb-2 opacity-25"></i>
+                                    No active authorizations found.
                                 </td>
                             </tr>
                             </tbody>
@@ -199,21 +141,10 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function toggleConsent(providerId, checkbox) {
-            const isChecked = checkbox.checked;
-            const label = document.getElementById('label-' + providerId);
-            label.innerText = isChecked ? 'Granted' : 'Revoked';
-            label.style.color = isChecked ? 'var(--system-green)' : '#94a3b8';
-
-            fetch('/api/consent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ providerId: providerId, consentGiven: isChecked })
-            });
-        }
-    </script>
 </div>
+
+<th:block layout:fragment="page-scripts">
+    <script th:src="@{/js/CDV1.js}"></script>
+</th:block>
 </body>
 </html>
