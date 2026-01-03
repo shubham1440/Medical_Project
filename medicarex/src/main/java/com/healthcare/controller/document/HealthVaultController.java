@@ -6,9 +6,11 @@ import com.healthcare.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +49,7 @@ public class HealthVaultController {
     }
 
 
+
     // --- DOWNLOAD ACTION ---
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadDocument(@PathVariable Long id) {
@@ -59,17 +62,34 @@ public class HealthVaultController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'PROVIDER')")
+    @ResponseBody
     public ResponseEntity<byte[]> viewDocument(@PathVariable Long id) {
-        DocumentDTO doc = documentService.getFileById(id);
+        try {
+            var auth = SecurityContextHolder.getContext().getAuthentication();
+            String email = auth.getName();
 
-        // Converting the 'data' string from DTO back to bytes
-        byte[] fileBytes = (doc.getData() != null) ? doc.getData() : new byte[0];
+            DocumentDTO doc = auth.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_PROVIDER"))
+                    ? documentService.getByConsentId(id)
+                    : documentService.getFileById(id);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + doc.getTitle() + "\"")
-                .contentType(MediaType.parseMediaType(doc.getDocumentType()))
-                .body(fileBytes);
+            if (doc == null || doc.getData() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String contentType = (doc.getDocumentType() != null) ? doc.getDocumentType() : "application/pdf";
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + doc.getTitle() + "\"")
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CACHE_CONTROL, "no-cache")
+                    .body(doc.getData());
+
+        } catch (Exception e) {
+            System.err.println("Error serving document: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 

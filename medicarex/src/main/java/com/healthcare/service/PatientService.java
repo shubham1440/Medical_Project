@@ -2,6 +2,7 @@ package com.healthcare.service;
 
 import com.healthcare.dto.PatientDTO;
 import com.healthcare.dto.PatientRegistryDTO;
+import com.healthcare.dto.PatientSearchResult;
 import com.healthcare.dto.request.CreatePatientRequest;
 import com.healthcare.dto.response.PageResponse;
 import org.springframework.data.domain.Pageable;
@@ -20,5 +21,7 @@ public interface PatientService {
     PageResponse<PatientDTO> searchPatients(String lastName, String mrn, Pageable pageable) throws Exception;
 
     List<PatientRegistryDTO> getDashboardRegistry() throws Exception;
+
+    public List<PatientSearchResult> findPatients(String query);
 }
 

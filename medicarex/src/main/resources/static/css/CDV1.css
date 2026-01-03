@@ -1,0 +1,123 @@
+ :root {
+            --gopal-navy: #0f172a;
+            --gopal-bg: #f8fafc;
+            --system-green: #10b981;
+            --system-red: #ef4444;
+            --system-amber: #f59e0b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f3f6f9;
+            color: var(--gopal-navy);
+        }
+
+        .bento-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .request-alert-card {
+            border-left: 5px solid #f59e0b;
+            background: #fffcf5;
+        }
+
+        .field-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-approve {
+            background-color: #10b981;
+            color: white;
+            border-radius: 12px;
+            font-weight: 700;
+            padding: 0.5rem 2rem;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-approve:hover { background-color: #059669; transform: translateY(-1px); }
+
+        .btn-reject {
+            background-color: transparent;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            border-radius: 12px;
+            font-weight: 700;
+            padding: 0.5rem 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reject:hover { background-color: #fef2f2; }
+
+        .vault-select-custom {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        .upload-icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+        }
+
+        .upload-loading { opacity: 0.5; pointer-events: none; }
+
+
+/* Back Button Styling - Refined for Black Hover */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background-color: #ffffff;
+    color: #0d6efd; /* Primary Blue for the arrow initially */
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+.btn-back:hover {
+    background-color: #000000; /* Black background on hover */
+    color: #ffffff !important; /* White arrow on hover */
+    transform: translateX(-4px); /* Slightly stronger movement */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2) !important;
+    border-color: #000000;
+}
+
+/* Ensure the icon inside inherits the color correctly */
+.btn-back i {
+    line-height: 0;
+    transition: color 0.25s ease;
+}
+
+/* Header Typography */
+.terminal-header {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1a1a1a;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+}

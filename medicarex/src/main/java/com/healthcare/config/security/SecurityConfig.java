@@ -66,9 +66,9 @@ public class SecurityConfig {
                         .requestMatchers("/ops/**").hasRole("OPS")
                         .requestMatchers("/my").hasAnyRole("PATIENT","PROVIDER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/documents/**").hasRole("PATIENT")
+                        .requestMatchers("/documents/**").hasAnyRole("PATIENT","PROVIDER")
                         .requestMatchers("/labs/**").hasRole("PATIENT")
-                        .requestMatchers("/consents/**").hasRole("PATIENT")
+                        .requestMatchers("/consents/**").hasAnyRole("PATIENT","PROVIDER")
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers

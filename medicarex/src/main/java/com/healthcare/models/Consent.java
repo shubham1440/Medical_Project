@@ -1,5 +1,6 @@
 package com.healthcare.models;
 
+import com.healthcare.models.enums.ConsentStatus;
 import com.healthcare.models.enums.PermissionType;
 import com.healthcare.models.enums.Role;
 import jakarta.persistence.*;
@@ -36,6 +37,10 @@ public class Consent extends BaseEntity {
     @Column(name = "permission_type", nullable = false, length = 20)
     private PermissionType permissionType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consentRequest_id")
+    private ConsentRequest consentRequest;
+
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
@@ -44,6 +49,18 @@ public class Consent extends BaseEntity {
 
     @Column(name = "revoked_at")
     private LocalDateTime revokedAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "document_id")
+    private Document document;
+
+//    @OneToOne (fetch = FetchType.LAZY)
+//    @JoinColumn(name = "document_Id",nullable = true)
+//    private ClinicalDocument clinicalDocument_Id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "consent_status", columnDefinition = "VARCHAR(255)")
+    private ConsentStatus consentStatus;
 
     @Column(name = "notes", length = 1000)
     private String notes;

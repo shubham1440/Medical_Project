@@ -118,6 +118,9 @@ public class AuditServiceImpl implements com.healthcare.service.AuditService {
         } else if (action != null && action.toLowerCase().contains("appointment")) {
             return "Appointment";
         }
+        else if (action != null && action.toLowerCase().contains("approve_consent_Request")) {
+            return "Consent_Request_Approved";
+        }
         return "Unknown";
     }
 
